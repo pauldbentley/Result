@@ -6,7 +6,7 @@
     <RootNamespace>Pdb.Results</RootNamespace>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.0-beta3</Version>
+    <Version>1.0.0-beta4</Version>
     <Authors>Paul Bentley</Authors>
     <Description>Wrapper for service results</Description>
   </PropertyGroup>

@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class OkResult<T> : ResultBase<T>
+    public class OkResult<T> : Result<T>
     {
         public OkResult(T value)
             : base(ResultStatus.Ok)

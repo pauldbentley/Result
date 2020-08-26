@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class InvalidResult<T> : ResultBase<T>
+    public class InvalidResult<T> : Result<T>
     {
         public InvalidResult(IDictionary<string, string[]> validationErrors)
             : base(ResultStatus.Invalid)
