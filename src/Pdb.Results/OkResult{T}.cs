@@ -14,7 +14,5 @@
             : base(ResultStatus.Ok)
         {
         }
-
-        public static implicit operator OkResult<T>(T value) => new OkResult<T>(value);
     }
 }

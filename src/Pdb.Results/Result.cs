@@ -19,58 +19,58 @@
 
         public object Problem { get; protected set; } = default!;
 
-        public static OkResult Ok() =>
+        public static Result Ok() =>
             new OkResult();
 
-        public static OkResult<T> Ok<T>(T value) =>
+        public static Result<T> Ok<T>(T value) =>
             new OkResult<T>(value);
 
-        public static ErrorResult Error(params string[] errors) =>
+        public static Result Error(params string[] errors) =>
             new ErrorResult(errors);
 
-        public static ErrorResult Error(IEnumerable<string> errors) =>
+        public static Result Error(IEnumerable<string> errors) =>
             new ErrorResult(errors);
 
-        public static ErrorResult Error(object problem) =>
+        public static Result Error(object problem) =>
             new ErrorResult(problem);
 
-        public static ErrorResult<T> Error<T>(params string[] errors) =>
+        public static Result<T> Error<T>(params string[] errors) =>
             new ErrorResult<T>(errors);
 
-        public static ErrorResult<T> Error<T>(IEnumerable<string> errors) =>
+        public static Result<T> Error<T>(IEnumerable<string> errors) =>
             new ErrorResult<T>(errors);
 
-        public static ErrorResult<T> Error<T>(object problem) =>
+        public static Result<T> Error<T>(object problem) =>
             new ErrorResult<T>(problem);
 
-        public static ForbiddenResult Forbidden() =>
+        public static Result Forbidden() =>
             new ForbiddenResult();
 
-        public static ForbiddenResult<T> Forbidden<T>() =>
+        public static Result<T> Forbidden<T>() =>
             new ForbiddenResult<T>();
 
-        public static InvalidResult Invalid(string key, string error) =>
+        public static Result Invalid(string key, string error) =>
             new InvalidResult(new Dictionary<string, string[]> { { key, new[] { error } } });
 
-        public static InvalidResult Invalid(string key, params string[] errors) =>
+        public static Result Invalid(string key, params string[] errors) =>
             new InvalidResult(new Dictionary<string, string[]> { { key, errors } });
 
-        public static InvalidResult Invalid(IDictionary<string, string[]> validationErrors) =>
+        public static Result Invalid(IDictionary<string, string[]> validationErrors) =>
             new InvalidResult(validationErrors);
 
-        public static InvalidResult<T> Invalid<T>(string key, string error) =>
+        public static Result<T> Invalid<T>(string key, string error) =>
             new InvalidResult<T>(new Dictionary<string, string[]> { { key, new[] { error } } });
 
-        public static InvalidResult<T> Invalid<T>(string key, params string[] errors) =>
+        public static Result<T> Invalid<T>(string key, params string[] errors) =>
             new InvalidResult<T>(new Dictionary<string, string[]> { { key, errors } });
 
-        public static InvalidResult<T> Invalid<T>(IDictionary<string, string[]> validationErrors) =>
+        public static Result<T> Invalid<T>(IDictionary<string, string[]> validationErrors) =>
             new InvalidResult<T>(validationErrors);
 
-        public static NotFoundResult NotFound() =>
+        public static Result NotFound() =>
             new NotFoundResult();
 
-        public static NotFoundResult<T> NotFound<T>() =>
+        public static Result<T> NotFound<T>() =>
             new NotFoundResult<T>();
     }
 }
