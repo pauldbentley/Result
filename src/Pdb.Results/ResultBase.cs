@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
 
-    public abstract class OperationResult : IResult
+    public abstract class ResultBase : IResult
     {
-        protected OperationResult(ResultStatus status)
+        protected ResultBase(ResultStatus status)
         {
             Status = status;
         }

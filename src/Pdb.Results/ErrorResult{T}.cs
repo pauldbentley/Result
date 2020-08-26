@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class ErrorResult<T> : OperationResult<T>
+    public class ErrorResult<T> : ResultBase<T>
     {
         public ErrorResult(IEnumerable<string> errors)
             : base(ResultStatus.Error)

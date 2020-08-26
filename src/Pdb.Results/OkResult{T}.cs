@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class OkResult<T> : OperationResult<T>
+    public class OkResult<T> : ResultBase<T>
     {
         public OkResult(T value)
             : base(ResultStatus.Ok)
@@ -14,5 +14,7 @@
             : base(ResultStatus.Ok)
         {
         }
+
+        public static implicit operator OkResult<T>(T value) => new OkResult<T>(value);
     }
 }
