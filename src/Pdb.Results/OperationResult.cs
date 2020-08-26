@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
 
-    public abstract class ResultBase : IResult
+    public abstract class OperationResult : IResult
     {
-        protected ResultBase(ResultStatus status)
+        protected OperationResult(ResultStatus status)
         {
             Status = status;
         }
@@ -17,6 +17,6 @@
 
         public bool IsSuccessful => Status == ResultStatus.Ok;
 
-        public object? Problem { get; protected set; }
+        public object Problem { get; protected set; } = default!;
     }
 }

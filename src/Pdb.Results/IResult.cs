@@ -8,7 +8,7 @@
 
         IEnumerable<string> Errors { get; }
 
-        object? Problem { get; }
+        object Problem { get; }
 
         IDictionary<string, string[]> ValidationErrors { get; }
 
