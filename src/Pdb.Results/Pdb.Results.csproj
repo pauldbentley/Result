@@ -9,7 +9,7 @@
     <Version>1.0.0</Version>
     <Authors>Paul Bentley (@paudbentley)</Authors>
     <Company>paulbentley.co.uk</Company>
-    <Description>A restul wrapper package</Description>
+    <Description>A result wrapper package</Description>
     <PackageProjectUrl>https://github.com/pauldbentley/results</PackageProjectUrl>
     <RepositoryUrl>https://github.com/pauldbentley/results</RepositoryUrl>
   </PropertyGroup>
