@@ -60,6 +60,11 @@
                 return page.NotFound();
             }
 
+            if (result.Status == ResultStatus.Forbidden)
+            {
+                return page.Forbid();
+            }
+
             if (result.Status == ResultStatus.Invalid)
             {
                 page.ModelState.AddModelErrors(result.ValidationErrors, modelPrefix);
@@ -109,6 +114,11 @@
             if (result.Status == ResultStatus.NotFound)
             {
                 return page.NotFound();
+            }
+
+            if (result.Status == ResultStatus.Forbidden)
+            {
+                return page.Forbid();
             }
 
             if (result.Status == ResultStatus.Invalid)
