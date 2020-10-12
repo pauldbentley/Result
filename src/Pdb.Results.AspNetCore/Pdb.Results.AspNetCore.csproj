@@ -4,11 +4,12 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <Authors>Paul Bentley (@paudbentley)</Authors>
     <Company>paulbentley.co.uk</Company>
     <Description>ASP.NET Core result extensions</Description>
     <PackageProjectUrl>https://github.com/pauldbentley/results</PackageProjectUrl>
+    <PackageReleaseNotes>Resolves issue with null actions.  Makes modelPrefix nullable.  Adds the errors to the model state on ResultStatus.Error</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/pauldbentley/results</RepositoryUrl>
   </PropertyGroup>
 
