@@ -28,8 +28,14 @@
         public IResult<TResponse> Invalid(string key, string error) =>
             Result.Invalid<TResponse>(key, error);
 
+        public IResult<TResponse> Invalid(string error) =>
+            Result.Invalid<TResponse>(error);
+
         public IResult<TResponse> Invalid(string key, params string[] errors) =>
             Result.Invalid<TResponse>(key, errors);
+
+        public IResult<TResponse> Invalid(params string[] errors) =>
+            Result.Invalid<TResponse>(errors);
 
         public IResult<TResponse> NotFound() =>
             Result.NotFound<TResponse>();

@@ -25,11 +25,17 @@
         public IResult Invalid(IDictionary<string, string[]> validationErrors) =>
             Result.Invalid(validationErrors);
 
+        public IResult Invalid(string error) =>
+            Result.Invalid(error);
+
         public IResult Invalid(string key, string error) =>
             Result.Invalid(key, error);
 
         public IResult Invalid(string key, params string[] errors) =>
             Result.Invalid(key, errors);
+
+        public IResult Invalid(params string[] errors) =>
+            Result.Invalid(errors);
 
         public IResult NotFound() =>
             Result.NotFound();
