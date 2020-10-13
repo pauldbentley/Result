@@ -49,6 +49,12 @@
         public static Result<T> Forbidden<T>() =>
             new ForbiddenResult<T>();
 
+        public static Result Invalid(string error) =>
+            Invalid(string.Empty, error);
+
+        public static Result Invalid(params string[] errors) =>
+            new InvalidResult(new Dictionary<string, string[]> { { string.Empty, errors } });
+
         public static Result Invalid(string key, string error) =>
             new InvalidResult(new Dictionary<string, string[]> { { key, new[] { error } } });
 
@@ -58,8 +64,14 @@
         public static Result Invalid(IDictionary<string, string[]> validationErrors) =>
             new InvalidResult(validationErrors);
 
+        public static Result<T> Invalid<T>(string error) =>
+            Invalid<T>(string.Empty, error);
+
         public static Result<T> Invalid<T>(string key, string error) =>
             new InvalidResult<T>(new Dictionary<string, string[]> { { key, new[] { error } } });
+
+        public static Result<T> Invalid<T>(params string[] errors) =>
+            Invalid<T>(string.Empty, errors);
 
         public static Result<T> Invalid<T>(string key, params string[] errors) =>
             new InvalidResult<T>(new Dictionary<string, string[]> { { key, errors } });
