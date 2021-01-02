@@ -13,13 +13,29 @@
         public ErrorResult(IEnumerable<string> errors)
             : base(ResultStatus.Error)
         {
-            Errors = errors ?? throw new ArgumentNullException(nameof(errors));
+            if (errors == null)
+            {
+                throw new ArgumentNullException(nameof(errors));
+            }
+
+            foreach (string error in errors)
+            {
+                AddError(error);
+            }
         }
 
         public ErrorResult(params string[] errors)
             : base(ResultStatus.Error)
         {
-            Errors = errors ?? throw new ArgumentNullException(nameof(errors));
+            if (errors == null)
+            {
+                throw new ArgumentNullException(nameof(errors));
+            }
+
+            foreach (string error in errors)
+            {
+                AddError(error);
+            }
         }
 
         public ErrorResult(object problem)

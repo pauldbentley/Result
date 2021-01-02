@@ -1,9 +1,12 @@
 ﻿namespace Pdb.Results
 {
+    using System;
     using System.Collections.Generic;
 
     public class Result
     {
+        private readonly List<string> _errors = new List<string>();
+
         protected Result(ResultStatus status)
         {
             Status = status;
@@ -11,7 +14,7 @@
 
         public ResultStatus Status { get; }
 
-        public IEnumerable<string> Errors { get; protected set; } = new List<string>();
+        public IEnumerable<string> Errors => _errors;
 
         public IReadOnlyDictionary<string, string[]> ValidationErrors { get; protected set; } = new Dictionary<string, string[]>();
 
@@ -90,5 +93,20 @@
 
         public static Result<T> NotFound<T>() =>
             new NotFoundResult<T>();
+
+        protected void AddError(string error)
+        {
+            if (error == null)
+            {
+                throw new ArgumentNullException(nameof(error));
+            }
+
+            if (string.IsNullOrWhiteSpace(error))
+            {
+                throw new ArgumentOutOfRangeException(nameof(error));
+            }
+
+            _errors.Add(error);
+        }
     }
 }
