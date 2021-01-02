@@ -6,7 +6,10 @@
 
     public static class ControllerBaseResultExtensions
     {
-        public static async Task<IActionResult> Result(this ControllerBase controller, Func<Task<IResult>> request, Func<IActionResult> ok)
+        public static async Task<IActionResult> Result(
+            this ControllerBase controller,
+            Func<Task<Result>> request,
+            Func<IActionResult> ok)
         {
             if (controller is null)
             {
@@ -32,10 +35,15 @@
             return GetResultAction(controller, result) ?? ok();
         }
 
-        public static Task<IActionResult> Result(this ControllerBase controller, Func<Task<IResult>> request) =>
+        public static Task<IActionResult> Result(
+            this ControllerBase controller,
+            Func<Task<Result>> request) =>
             Result(controller, request, () => controller.Ok());
 
-        public static async Task<IActionResult> Result<TValue>(this ControllerBase controller, Func<Task<IResult<TValue>>> request, Func<TValue, IActionResult> ok)
+        public static async Task<IActionResult> Result<TValue>(
+            this ControllerBase controller,
+            Func<Task<Result<TValue>>> request,
+            Func<TValue, IActionResult> ok)
         {
             if (controller is null)
             {
@@ -61,10 +69,12 @@
             return GetResultAction(controller, result) ?? ok(result.Value);
         }
 
-        public static Task<IActionResult> Result<TValue>(this ControllerBase controller, Func<Task<IResult<TValue>>> request) =>
+        public static Task<IActionResult> Result<TValue>(
+            this ControllerBase controller,
+            Func<Task<Result<TValue>>> request) =>
             Result(controller, request, value => controller.Ok(value));
 
-        private static IActionResult? GetResultAction(ControllerBase controller, IResult result)
+        private static IActionResult? GetResultAction(ControllerBase controller, Result result)
         {
             if (result.Status == ResultStatus.NotFound)
             {

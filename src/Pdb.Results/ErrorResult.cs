@@ -2,20 +2,24 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
-    public class ErrorResult : Result
+    internal class ErrorResult : Result
     {
+        public ErrorResult()
+            : base(ResultStatus.Error)
+        {
+        }
+
         public ErrorResult(IEnumerable<string> errors)
             : base(ResultStatus.Error)
         {
-            Errors = errors ?? Enumerable.Empty<string>();
+            Errors = errors ?? throw new ArgumentNullException(nameof(errors));
         }
 
         public ErrorResult(params string[] errors)
             : base(ResultStatus.Error)
         {
-            Errors = errors;
+            Errors = errors ?? throw new ArgumentNullException(nameof(errors));
         }
 
         public ErrorResult(object problem)

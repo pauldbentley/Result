@@ -6,16 +6,27 @@
 
     public static class PageModelResultExtensions
     {
-        public static Task<IActionResult> Result<TResult>(this PageModel page, Func<Task<IResult<TResult>>> request) =>
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request) =>
             Result(page, request, value => { }, null);
 
-        public static Task<IActionResult> Result<TResult>(this PageModel page, Func<Task<IResult<TResult>>> request, Action<TResult> ok) =>
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Action<TResult> ok) =>
             Result(page, request, ok, null);
 
-        public static Task<IActionResult> Result<TResult>(this PageModel page, Func<Task<IResult<TResult>>> request, string? modelPrefix = null) =>
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            string? modelPrefix = null) =>
             Result(page, request, value => { }, modelPrefix);
 
-        public static Task<IActionResult> Result<TResult>(this PageModel page, Func<Task<IResult<TResult>>> request, Action<TResult> ok, string? modelPrefix = null) =>
+        public static Task<IActionResult> Result<TResult>(this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Action<TResult> ok,
+            string? modelPrefix = null) =>
             Result(
                 page,
                 request,
@@ -26,10 +37,15 @@
                 },
                 modelPrefix);
 
-        public static Task<IActionResult> Result<TResult>(this PageModel page, Func<Task<IResult<TResult>>> request, Func<TResult, IActionResult> ok) =>
+        public static Task<IActionResult> Result<TResult>(this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Func<TResult, IActionResult> ok) =>
             Result(page, request, ok, null);
 
-        public static async Task<IActionResult> Result<TResult>(this PageModel page, Func<Task<IResult<TResult>>> request, Func<TResult, IActionResult> ok, string? modelPrefix = null)
+        public static async Task<IActionResult> Result<TResult>(this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Func<TResult, IActionResult> ok,
+            string? modelPrefix = null)
         {
             if (page is null)
             {
@@ -55,16 +71,25 @@
             return GetResultAction(page, result, modelPrefix) ?? ok(result.Value);
         }
 
-        public static Task<IActionResult> Result(this PageModel page, Func<Task<IResult>> request) =>
+        public static Task<IActionResult> Result(this PageModel page, Func<Task<Result>> request) =>
             Result(page, request, () => page.Page(), null);
 
-        public static Task<IActionResult> Result(this PageModel page, Func<Task<IResult>> request, Func<IActionResult> ok) =>
+        public static Task<IActionResult> Result(
+            this PageModel page,
+            Func<Task<Result>> request,
+            Func<IActionResult> ok) =>
             Result(page, request, ok, null);
 
-        public static Task<IActionResult> Result(this PageModel page, Func<Task<IResult>> request, string? modelPrefix = null) =>
+        public static Task<IActionResult> Result(
+            this PageModel page,
+            Func<Task<Result>> request,
+            string? modelPrefix = null) =>
             Result(page, request, () => page.Page(), modelPrefix);
 
-        public static async Task<IActionResult> Result(this PageModel page, Func<Task<IResult>> request, Func<IActionResult> ok, string? modelPrefix = null)
+        public static async Task<IActionResult> Result(this PageModel page,
+            Func<Task<Result>> request,
+            Func<IActionResult> ok,
+            string? modelPrefix = null)
         {
             if (page is null)
             {
@@ -90,7 +115,10 @@
             return GetResultAction(page, result, modelPrefix) ?? ok();
         }
 
-        private static IActionResult? GetResultAction(PageModel page, IResult result, string? modelPrefix = null)
+        private static IActionResult? GetResultAction(
+            PageModel page,
+            Result result,
+            string? modelPrefix = null)
         {
             if (result.Status == ResultStatus.NotFound)
             {

@@ -1,6 +1,6 @@
 ﻿namespace Pdb.Results
 {
-    public class NotFoundResult : Result
+    internal class NotFoundResult : Result
     {
         public NotFoundResult()
             : base(ResultStatus.NotFound)

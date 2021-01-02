@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
 
-    public class InvalidResult : Result
+    internal class InvalidResult : Result
     {
-        public InvalidResult(IDictionary<string, string[]> validationErrors)
+        public InvalidResult(IReadOnlyDictionary<string, string[]> validationErrors)
             : base(ResultStatus.Invalid)
         {
             ValidationErrors = validationErrors ?? throw new ArgumentNullException(nameof(validationErrors));

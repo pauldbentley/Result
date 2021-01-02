@@ -1,6 +1,6 @@
 ﻿namespace Pdb.Results
 {
-    public class Result<T> : Result, IResult<T>
+    public class Result<T> : Result
     {
         protected Result(ResultStatus status)
             : base(status)

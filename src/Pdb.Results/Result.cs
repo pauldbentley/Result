@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class Result : IResult
+    public class Result
     {
         protected Result(ResultStatus status)
         {
@@ -13,7 +13,7 @@
 
         public IEnumerable<string> Errors { get; protected set; } = new List<string>();
 
-        public IDictionary<string, string[]> ValidationErrors { get; protected set; } = new Dictionary<string, string[]>();
+        public IReadOnlyDictionary<string, string[]> ValidationErrors { get; protected set; } = new Dictionary<string, string[]>();
 
         public bool IsSuccessful => Status == ResultStatus.Ok;
 
@@ -25,6 +25,9 @@
         public static Result<T> Ok<T>(T value) =>
             new OkResult<T>(value);
 
+        public static Result Error() =>
+            new ErrorResult();
+
         public static Result Error(params string[] errors) =>
             new ErrorResult(errors);
 
@@ -33,6 +36,9 @@
 
         public static Result Error(object problem) =>
             new ErrorResult(problem);
+
+        public static Result<T> Error<T>() =>
+            new ErrorResult<T>();
 
         public static Result<T> Error<T>(params string[] errors) =>
             new ErrorResult<T>(errors);
@@ -61,7 +67,7 @@
         public static Result Invalid(string key, params string[] errors) =>
             new InvalidResult(new Dictionary<string, string[]> { { key, errors } });
 
-        public static Result Invalid(IDictionary<string, string[]> validationErrors) =>
+        public static Result Invalid(IReadOnlyDictionary<string, string[]> validationErrors) =>
             new InvalidResult(validationErrors);
 
         public static Result<T> Invalid<T>(string error) =>
@@ -76,7 +82,7 @@
         public static Result<T> Invalid<T>(string key, params string[] errors) =>
             new InvalidResult<T>(new Dictionary<string, string[]> { { key, errors } });
 
-        public static Result<T> Invalid<T>(IDictionary<string, string[]> validationErrors) =>
+        public static Result<T> Invalid<T>(IReadOnlyDictionary<string, string[]> validationErrors) =>
             new InvalidResult<T>(validationErrors);
 
         public static Result NotFound() =>

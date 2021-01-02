@@ -1,6 +1,6 @@
 ﻿namespace Pdb.Results
 {
-    public class OkResult : Result
+    internal class OkResult : Result
     {
         public OkResult()
             : base(ResultStatus.Ok)

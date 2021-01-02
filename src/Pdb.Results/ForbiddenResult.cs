@@ -1,6 +1,6 @@
 ﻿namespace Pdb.Results
 {
-    public class ForbiddenResult : Result
+    internal class ForbiddenResult : Result
     {
         public ForbiddenResult()
             : base(ResultStatus.Forbidden)
