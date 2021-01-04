@@ -4,22 +4,18 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.2.0</Version>
+    <Version>2.3.0</Version>
     <Authors>Paul Bentley (@paudbentley)</Authors>
     <Company>paulbentley.co.uk</Company>
     <Description>MediatR extensions for Pdb.Results</Description>
     <PackageProjectUrl>https://github.com/pauldbentley/results</PackageProjectUrl>
-    <PackageReleaseNotes>Updates to Pdb.Results 2.2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Updates to Pdb.Results 2.3.0</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/pauldbentley/results</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Pdb.Results" Version="2.2.0" />
+    <PackageReference Include="Pdb.Results" Version="2.3.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

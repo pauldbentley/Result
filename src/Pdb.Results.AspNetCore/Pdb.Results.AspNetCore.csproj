@@ -4,12 +4,12 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.2.0</Version>
+    <Version>2.3.0</Version>
     <Authors>Paul Bentley (@pauldbentley)</Authors>
     <Company>paulbentley.co.uk</Company>
     <Description>ASP.NET Core result extensions</Description>
     <PackageProjectUrl>https://github.com/pauldbentley/results</PackageProjectUrl>
-    <PackageReleaseNotes>Updates to Pdb.Results 2.2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Updates to Pdb.Results 2.3.0</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/pauldbentley/results</RepositoryUrl>
   </PropertyGroup>
 
@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.2.5" />
-    <PackageReference Include="Pdb.Results" Version="2.2.0" />
+    <PackageReference Include="Pdb.Results" Version="2.3.0" />
   </ItemGroup>
 
 </Project>
