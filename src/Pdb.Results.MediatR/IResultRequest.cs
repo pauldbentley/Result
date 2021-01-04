@@ -2,7 +2,7 @@
 {
     using Pdb.Results;
 
-    public interface IResultRequest : IRequest<IResult>
+    public interface IResultRequest : IRequest<Result>
     {
     }
 }

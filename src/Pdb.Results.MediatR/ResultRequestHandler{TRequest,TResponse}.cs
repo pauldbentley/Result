@@ -5,42 +5,42 @@
     using System.Threading.Tasks;
     using Pdb.Results;
 
-    public abstract class ResultRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, IResult<TResponse>>
-        where TRequest : IRequest<IResult<TResponse>>
+    public abstract class ResultRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, Result<TResponse>>
+        where TRequest : IRequest<Result<TResponse>>
     {
-        public abstract Task<IResult<TResponse>> Handle(TRequest request, CancellationToken cancellationToken);
+        public abstract Task<Result<TResponse>> Handle(TRequest request, CancellationToken cancellationToken);
 
-        public IResult<TResponse> Error(params string[] errors) =>
+        public Result<TResponse> Error(params string[] errors) =>
             Result.Error<TResponse>(errors);
 
-        public IResult<TResponse> Error(IEnumerable<string> errors) =>
+        public Result<TResponse> Error(IEnumerable<string> errors) =>
             Result.Error<TResponse>(errors);
 
-        public IResult<TResponse> Error(object problem) =>
+        public Result<TResponse> Error(object problem) =>
             Result.Error<TResponse>(problem);
 
-        public IResult<TResponse> Forbidden() =>
+        public Result<TResponse> Forbidden() =>
             Result.Forbidden<TResponse>();
 
-        public IResult<TResponse> Invalid(IDictionary<string, string[]> validationErrors) =>
+        public Result<TResponse> Invalid(IDictionary<string, string[]> validationErrors) =>
             Result.Invalid<TResponse>(validationErrors);
 
-        public IResult<TResponse> Invalid(string key, string error) =>
+        public Result<TResponse> Invalid(string key, string error) =>
             Result.Invalid<TResponse>(key, error);
 
-        public IResult<TResponse> Invalid(string error) =>
+        public Result<TResponse> Invalid(string error) =>
             Result.Invalid<TResponse>(error);
 
-        public IResult<TResponse> Invalid(string key, params string[] errors) =>
+        public Result<TResponse> Invalid(string key, params string[] errors) =>
             Result.Invalid<TResponse>(key, errors);
 
-        public IResult<TResponse> Invalid(params string[] errors) =>
+        public Result<TResponse> Invalid(params string[] errors) =>
             Result.Invalid<TResponse>(errors);
 
-        public IResult<TResponse> NotFound() =>
+        public Result<TResponse> NotFound() =>
             Result.NotFound<TResponse>();
 
-        public IResult<TResponse> Ok(TResponse value) =>
+        public Result<TResponse> Ok(TResponse value) =>
             Result.Ok(value);
     }
 }

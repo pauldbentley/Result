@@ -5,42 +5,42 @@
     using System.Threading.Tasks;
     using Pdb.Results;
 
-    public abstract class ResultRequestHandler<TRequest> : IRequestHandler<TRequest, IResult>
-        where TRequest : IRequest<IResult>
+    public abstract class ResultRequestHandler<TRequest> : IRequestHandler<TRequest, Result>
+        where TRequest : IRequest<Result>
     {
-        public abstract Task<IResult> Handle(TRequest request, CancellationToken cancellationToken);
+        public abstract Task<Result> Handle(TRequest request, CancellationToken cancellationToken);
 
-        public IResult Error(params string[] errors) =>
+        public Result Error(params string[] errors) =>
             Result.Error(errors);
 
-        public IResult Error(IEnumerable<string> errors) =>
+        public Result Error(IEnumerable<string> errors) =>
             Result.Error(errors);
 
-        public IResult Error(object problem) =>
+        public Result Error(object problem) =>
             Result.Error(problem);
 
-        public IResult Forbidden() =>
+        public Result Forbidden() =>
             Result.Forbidden();
 
-        public IResult Invalid(IDictionary<string, string[]> validationErrors) =>
+        public Result Invalid(IDictionary<string, string[]> validationErrors) =>
             Result.Invalid(validationErrors);
 
-        public IResult Invalid(string error) =>
+        public Result Invalid(string error) =>
             Result.Invalid(error);
 
-        public IResult Invalid(string key, string error) =>
+        public Result Invalid(string key, string error) =>
             Result.Invalid(key, error);
 
-        public IResult Invalid(string key, params string[] errors) =>
+        public Result Invalid(string key, params string[] errors) =>
             Result.Invalid(key, errors);
 
-        public IResult Invalid(params string[] errors) =>
+        public Result Invalid(params string[] errors) =>
             Result.Invalid(errors);
 
-        public IResult NotFound() =>
+        public Result NotFound() =>
             Result.NotFound();
 
-        public IResult Ok() =>
+        public Result Ok() =>
             Result.Ok();
     }
 }
