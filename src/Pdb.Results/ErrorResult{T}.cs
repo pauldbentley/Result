@@ -2,36 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     internal class ErrorResult<T> : Result<T>
     {
+        public ErrorResult()
+            : base(ResultStatus.Error)
+        {
+        }
+
         public ErrorResult(IEnumerable<string> errors)
             : base(ResultStatus.Error)
         {
-            if (errors == null)
-            {
-                throw new ArgumentNullException(nameof(errors));
-            }
-
-            foreach (string error in errors)
-            {
-                AddError(error);
-            }
-        }
-
-        public ErrorResult(params string[] errors)
-            : base(ResultStatus.Error)
-        {
-            if (errors == null)
-            {
-                throw new ArgumentNullException(nameof(errors));
-            }
-
-            foreach (string error in errors)
-            {
-                AddError(error);
-            }
+            AddErrors(errors);
         }
 
         public ErrorResult(object error)

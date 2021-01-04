@@ -94,19 +94,17 @@
         public static Result<T> NotFound<T>() =>
             new NotFoundResult<T>();
 
-        protected void AddError(string error)
+        protected void AddErrors(IEnumerable<string> errors)
         {
-            if (error == null)
+            if (errors == null)
             {
-                throw new ArgumentNullException(nameof(error));
+                throw new ArgumentNullException(nameof(errors));
             }
 
-            if (string.IsNullOrWhiteSpace(error))
+            foreach (string error in errors)
             {
-                throw new ArgumentOutOfRangeException(nameof(error));
+                _errors.Add(error);
             }
-
-            _errors.Add(error);
         }
     }
 }
