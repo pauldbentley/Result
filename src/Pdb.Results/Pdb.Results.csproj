@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Pdb.Results</AssemblyName>
     <RootNamespace>Pdb.Results</RootNamespace>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.1.0</Version>
+    <Version>2.2.0</Version>
     <Authors>Paul Bentley (@pauldbentley)</Authors>
     <Company>paulbentley.co.uk</Company>
     <Description>A result wrapper package</Description>
