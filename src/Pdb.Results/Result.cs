@@ -2,10 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class Result
     {
         private readonly List<string> _errors = new List<string>();
+
+        private readonly Dictionary<string, string[]> _validationErrors = new Dictionary<string, string[]>();
 
         protected Result(ResultStatus status)
         {
@@ -16,7 +19,7 @@
 
         public IEnumerable<string> Errors => _errors;
 
-        public IReadOnlyDictionary<string, string[]> ValidationErrors { get; protected set; } = new Dictionary<string, string[]>();
+        public IReadOnlyDictionary<string, string[]> ValidationErrors => _validationErrors;
 
         public bool IsSuccessful => Status == ResultStatus.Ok;
 
@@ -58,34 +61,46 @@
         public static Result<T> Forbidden<T>() =>
             new ForbiddenResult<T>();
 
-        public static Result Invalid(string error) =>
-            Invalid(string.Empty, error);
+        public static Result Invalid() =>
+            new InvalidResult();
 
-        public static Result Invalid(params string[] errors) =>
-            new InvalidResult(new Dictionary<string, string[]> { { string.Empty, errors } });
+        public static Result Invalid(string error) =>
+            Invalid(string.Empty, new[] { error });
 
         public static Result Invalid(string key, string error) =>
-            new InvalidResult(new Dictionary<string, string[]> { { key, new[] { error } } });
+            Invalid(key, new[] { error });
+
+        public static Result Invalid(params string[] errors) =>
+            Invalid(string.Empty, errors);
+
+        public static Result Invalid(IEnumerable<string> errors) =>
+            Invalid(string.Empty, errors.ToArray());
 
         public static Result Invalid(string key, params string[] errors) =>
-            new InvalidResult(new Dictionary<string, string[]> { { key, errors } });
+            Invalid(new Dictionary<string, string[]> { { key, errors } });
 
-        public static Result Invalid(IReadOnlyDictionary<string, string[]> validationErrors) =>
+        public static Result Invalid(string key, IEnumerable<string> errors) =>
+            Invalid(new Dictionary<string, string[]> { { key, errors.ToArray() } });
+
+        public static Result Invalid(IDictionary<string, string[]> validationErrors) =>
             new InvalidResult(validationErrors);
 
+        public static Result<T> Invalid<T>() =>
+            new InvalidResult<T>();
+
         public static Result<T> Invalid<T>(string error) =>
-            Invalid<T>(string.Empty, error);
+            Invalid<T>(string.Empty, new[] { error });
 
         public static Result<T> Invalid<T>(string key, string error) =>
-            new InvalidResult<T>(new Dictionary<string, string[]> { { key, new[] { error } } });
+            Invalid<T>(key, new[] { error });
 
         public static Result<T> Invalid<T>(params string[] errors) =>
             Invalid<T>(string.Empty, errors);
 
         public static Result<T> Invalid<T>(string key, params string[] errors) =>
-            new InvalidResult<T>(new Dictionary<string, string[]> { { key, errors } });
+            Invalid<T>(new Dictionary<string, string[]> { { key, errors } });
 
-        public static Result<T> Invalid<T>(IReadOnlyDictionary<string, string[]> validationErrors) =>
+        public static Result<T> Invalid<T>(IDictionary<string, string[]> validationErrors) =>
             new InvalidResult<T>(validationErrors);
 
         public static Result NotFound() =>
@@ -104,6 +119,19 @@
             foreach (string error in errors)
             {
                 _errors.Add(error);
+            }
+        }
+
+        protected void AddValidationErrors(IEnumerable<KeyValuePair<string, string[]>> validationErrors)
+        {
+            if (validationErrors == null)
+            {
+                throw new ArgumentNullException(nameof(validationErrors));
+            }
+
+            foreach (var validationError in validationErrors)
+            {
+                _validationErrors.Add(validationError.Key, validationError.Value);
             }
         }
     }

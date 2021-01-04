@@ -1,14 +1,18 @@
 ﻿namespace Pdb.Results
 {
-    using System;
     using System.Collections.Generic;
 
     internal class InvalidResult : Result
     {
-        public InvalidResult(IReadOnlyDictionary<string, string[]> validationErrors)
+        public InvalidResult()
             : base(ResultStatus.Invalid)
         {
-            ValidationErrors = validationErrors ?? throw new ArgumentNullException(nameof(validationErrors));
+        }
+
+        public InvalidResult(IDictionary<string, string[]> validationErrors)
+            : base(ResultStatus.Invalid)
+        {
+            AddValidationErrors(validationErrors);
         }
     }
 }
