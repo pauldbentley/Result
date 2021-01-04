@@ -9,7 +9,7 @@
         {
         }
 
-        public InvalidResult(IDictionary<string, string[]> validationErrors)
+        public InvalidResult(IEnumerable<KeyValuePair<string, string[]>> validationErrors)
             : base(ResultStatus.Invalid)
         {
             AddValidationErrors(validationErrors);

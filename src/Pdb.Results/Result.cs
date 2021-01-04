@@ -82,7 +82,7 @@
         public static Result Invalid(string key, IEnumerable<string> errors) =>
             Invalid(new Dictionary<string, string[]> { { key, errors.ToArray() } });
 
-        public static Result Invalid(IDictionary<string, string[]> validationErrors) =>
+        public static Result Invalid(IEnumerable<KeyValuePair<string, string[]>> validationErrors) =>
             new InvalidResult(validationErrors);
 
         public static Result<T> Invalid<T>() =>
@@ -100,7 +100,7 @@
         public static Result<T> Invalid<T>(string key, params string[] errors) =>
             Invalid<T>(new Dictionary<string, string[]> { { key, errors } });
 
-        public static Result<T> Invalid<T>(IDictionary<string, string[]> validationErrors) =>
+        public static Result<T> Invalid<T>(IEnumerable<KeyValuePair<string, string[]>> validationErrors) =>
             new InvalidResult<T>(validationErrors);
 
         public static Result NotFound() =>

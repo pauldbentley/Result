@@ -6,12 +6,12 @@
     <RootNamespace>Pdb.Results</RootNamespace>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.3.0</Version>
+    <Version>2.3.1</Version>
     <Authors>Paul Bentley (@pauldbentley)</Authors>
     <Company>paulbentley.co.uk</Company>
     <Description>A result wrapper package</Description>
     <PackageProjectUrl>https://github.com/pauldbentley/results</PackageProjectUrl>
-    <PackageReleaseNotes>Removes IResult interface.  Adds overloads to the Invalid methods.</PackageReleaseNotes>
+    <PackageReleaseNotes>Changes invalid overload to take IEnumerable.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/pauldbentley/results</RepositoryUrl>
   </PropertyGroup>
 
