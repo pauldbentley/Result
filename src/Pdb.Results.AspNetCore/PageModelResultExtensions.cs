@@ -9,42 +9,311 @@
         public static Task<IActionResult> Result<TResult>(
             this PageModel page,
             Func<Task<Result<TResult>>> request) =>
-            Result(page, request, value => { }, null);
+            ResultCoreAsync(
+                page,
+                request,
+                _ => page.Page(),
+                _ => Task.CompletedTask,
+                null);
 
         public static Task<IActionResult> Result<TResult>(
             this PageModel page,
             Func<Task<Result<TResult>>> request,
-            Action<TResult> ok) =>
-            Result(page, request, ok, null);
-
-        public static Task<IActionResult> Result<TResult>(
-            this PageModel page,
-            Func<Task<Result<TResult>>> request,
-            string? modelPrefix = null) =>
-            Result(page, request, value => { }, modelPrefix);
-
-        public static Task<IActionResult> Result<TResult>(this PageModel page,
-            Func<Task<Result<TResult>>> request,
-            Action<TResult> ok,
-            string? modelPrefix = null) =>
-            Result(
+            Action<TResult> okAction) =>
+            ResultCoreAsync(
                 page,
                 request,
                 value =>
                 {
-                    ok.Invoke(value);
+                    okAction(value);
                     return page.Page();
                 },
-                modelPrefix);
+                _ => Task.CompletedTask,
+                null);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Action<TResult> okAction,
+            Action<Result> errorAction) =>
+            ResultCoreAsync(
+                page,
+                request,
+                value =>
+                {
+                    okAction(value);
+                    return page.Page();
+                },
+                error =>
+                {
+                    errorAction(error);
+                    return Task.CompletedTask;
+                },
+                null);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Action<TResult> okAction,
+            Func<Result, Task> errorTask) =>
+            ResultCoreAsync(
+                page,
+                request,
+                value =>
+                {
+                    okAction(value);
+                    return page.Page();
+                },
+                error => errorTask(error),
+                null);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                _ => page.Page(),
+                _ => Task.CompletedTask,
+                modelStatePrefix);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Action<TResult> okAction,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                value =>
+                {
+                    okAction(value);
+                    return page.Page();
+                },
+                _ => Task.CompletedTask,
+                modelStatePrefix);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Action<TResult> okAction,
+            Action<Result> errorAction,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                result =>
+                {
+                    okAction(result);
+                    return page.Page();
+                },
+                error =>
+                {
+                    errorAction(error);
+                    return Task.CompletedTask;
+                },
+                modelStatePrefix);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Action<TResult> okAction,
+            Func<Result, Task> errorTask,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                value =>
+                {
+                    okAction(value);
+                    return page.Page();
+                },
+                errorTask,
+                modelStatePrefix);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Func<TResult, IActionResult> okActionResult) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                _ => Task.CompletedTask,
+                null);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Func<TResult, IActionResult> okActionResult,
+            Action<Result> errorAction) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                error =>
+                {
+                    errorAction(error);
+                    return Task.CompletedTask;
+                },
+                null);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Func<TResult, IActionResult> okActionResult,
+            Func<Result, Task> errorAction) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                errorAction,
+                null);
+
+        public static Task<IActionResult> Result<TResult>(
+            this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Func<TResult, IActionResult> okActionResult,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                _ => Task.CompletedTask,
+                modelStatePrefix);
 
         public static Task<IActionResult> Result<TResult>(this PageModel page,
             Func<Task<Result<TResult>>> request,
-            Func<TResult, IActionResult> ok) =>
-            Result(page, request, ok, null);
+            Func<TResult, IActionResult> okActionResult,
+            Action<Result> errorAction,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                error =>
+                {
+                    errorAction(error);
+                    return Task.CompletedTask;
+                },
+                modelStatePrefix);
 
-        public static async Task<IActionResult> Result<TResult>(this PageModel page,
+        public static Task<IActionResult> Result<TResult>(this PageModel page,
             Func<Task<Result<TResult>>> request,
-            Func<TResult, IActionResult> ok,
+            Func<TResult, IActionResult> okActionResult,
+            Func<Result, Task> errorTask,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                errorTask,
+                modelStatePrefix);
+
+        public static Task<IActionResult> Result(
+            this PageModel page,
+            Func<Task<Result>> request) =>
+            ResultCoreAsync(
+                page,
+                request,
+                () => page.Page(),
+                _ => Task.CompletedTask,
+                null);
+
+        public static Task<IActionResult> Result(
+            this PageModel page,
+            Func<Task<Result>> request,
+            Func<IActionResult> okActionResult) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                _ => Task.CompletedTask,
+                null);
+
+        public static Task<IActionResult> Result(
+            this PageModel page,
+            Func<Task<Result>> request,
+            Func<IActionResult> okActionResult,
+            Action<Result> errorAction) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                error =>
+                {
+                    errorAction(error);
+                    return Task.CompletedTask;
+                },
+                null);
+
+        public static Task<IActionResult> Result(
+            this PageModel page,
+            Func<Task<Result>> request,
+            Func<IActionResult> okActionResult,
+            Func<Result, Task> errorTask) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                errorTask,
+                null);
+
+        public static Task<IActionResult> Result(
+            this PageModel page,
+            Func<Task<Result>> request,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                () => page.Page(),
+                _ => Task.CompletedTask,
+                modelStatePrefix);
+
+        public static Task<IActionResult> Result(this PageModel page,
+            Func<Task<Result>> request,
+            Func<IActionResult> okActionResult,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                _ => Task.CompletedTask,
+                modelStatePrefix);
+
+        public static Task<IActionResult> Result(this PageModel page,
+            Func<Task<Result>> request,
+            Func<IActionResult> okActionResult,
+            Action<Result> errorAction,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                error =>
+                {
+                    errorAction(error);
+                    return Task.CompletedTask;
+                },
+                modelStatePrefix);
+
+        public static Task<IActionResult> Result(this PageModel page,
+            Func<Task<Result>> request,
+            Func<IActionResult> okActionResult,
+            Func<Result, Task> errorTask,
+            string? modelStatePrefix = null) =>
+            ResultCoreAsync(
+                page,
+                request,
+                okActionResult,
+                errorTask,
+                modelStatePrefix);
+
+        private static async Task<IActionResult> ResultCoreAsync<TResult>(this PageModel page,
+            Func<Task<Result<TResult>>> request,
+            Func<TResult, IActionResult> okActionResult,
+            Func<Result, Task> errorTask,
             string? modelPrefix = null)
         {
             if (page is null)
@@ -57,38 +326,33 @@
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (ok is null)
+            if (okActionResult is null)
             {
-                throw new ArgumentNullException(nameof(ok));
+                throw new ArgumentNullException(nameof(okActionResult));
             }
 
             if (!page.ModelState.IsValid)
             {
+                await errorTask(Pdb.Results.Result.Invalid());
                 return page.Page();
             }
 
             var result = await request();
-            return GetResultAction(page, result, modelPrefix) ?? ok(result.Value);
+            var errorActionResult = GetErrorActionResult(page, result, modelPrefix);
+            
+            if (errorActionResult != null)
+            {
+                await errorTask(result);
+                return errorActionResult;
+            }
+            
+            return okActionResult(result.Value);
         }
 
-        public static Task<IActionResult> Result(this PageModel page, Func<Task<Result>> request) =>
-            Result(page, request, () => page.Page(), null);
-
-        public static Task<IActionResult> Result(
-            this PageModel page,
-            Func<Task<Result>> request,
-            Func<IActionResult> ok) =>
-            Result(page, request, ok, null);
-
-        public static Task<IActionResult> Result(
-            this PageModel page,
-            Func<Task<Result>> request,
-            string? modelPrefix = null) =>
-            Result(page, request, () => page.Page(), modelPrefix);
-
-        public static async Task<IActionResult> Result(this PageModel page,
+        private static async Task<IActionResult> ResultCoreAsync(this PageModel page,
             Func<Task<Result>> request,
             Func<IActionResult> ok,
+            Func<Result, Task> errorTask,
             string? modelPrefix = null)
         {
             if (page is null)
@@ -108,14 +372,23 @@
 
             if (!page.ModelState.IsValid)
             {
+                await errorTask(Pdb.Results.Result.Invalid());
                 return page.Page();
             }
 
             var result = await request();
-            return GetResultAction(page, result, modelPrefix) ?? ok();
+            var errorActionResult = GetErrorActionResult(page, result, modelPrefix);
+
+            if (errorActionResult != null)
+            {
+                await errorTask(result);
+                return errorActionResult;
+            }
+
+            return ok();
         }
 
-        private static IActionResult? GetResultAction(
+        private static IActionResult? GetErrorActionResult(
             PageModel page,
             Result result,
             string? modelPrefix = null)
