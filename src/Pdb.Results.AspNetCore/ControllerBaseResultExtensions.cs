@@ -6,25 +6,46 @@
 
     public static class ControllerBaseResultExtensions
     {
-        public static async Task<IActionResult> Result(
+        public static Task<IActionResult> Result(
+            this ControllerBase controller,
+            Func<Task<Result>> request,
+            Func<IActionResult> ok) =>
+            ResultCore(
+                controller,
+                request,
+                ok);
+
+        public static Task<IActionResult> Result(
+            this ControllerBase controller,
+            Func<Task<Result>> request) =>
+            ResultCore(
+                controller,
+                request,
+                () => controller.Ok());
+
+        public static Task<IActionResult> Result<TValue>(
+            this ControllerBase controller,
+            Func<Task<Result<TValue>>> request,
+            Func<TValue, IActionResult> ok) =>
+            ResultCore(
+                controller,
+                request,
+                ok);
+
+        public static Task<IActionResult> Result<TValue>(
+            this ControllerBase controller,
+            Func<Task<Result<TValue>>> request) =>
+            ResultCore(
+                controller,
+                request,
+                value => controller.Ok(value));
+
+        private static async Task<IActionResult> ResultCore(
             this ControllerBase controller,
             Func<Task<Result>> request,
             Func<IActionResult> ok)
         {
-            if (controller is null)
-            {
-                throw new ArgumentNullException(nameof(controller));
-            }
-
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
-            if (ok is null)
-            {
-                throw new ArgumentNullException(nameof(ok));
-            }
+            Guard(controller, request, ok);
 
             if (!controller.ModelState.IsValid)
             {
@@ -35,30 +56,12 @@
             return GetResultAction(controller, result) ?? ok();
         }
 
-        public static Task<IActionResult> Result(
-            this ControllerBase controller,
-            Func<Task<Result>> request) =>
-            Result(controller, request, () => controller.Ok());
-
-        public static async Task<IActionResult> Result<TValue>(
+        private static async Task<IActionResult> ResultCore<TValue>(
             this ControllerBase controller,
             Func<Task<Result<TValue>>> request,
             Func<TValue, IActionResult> ok)
         {
-            if (controller is null)
-            {
-                throw new ArgumentNullException(nameof(controller));
-            }
-
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
-            if (ok is null)
-            {
-                throw new ArgumentNullException(nameof(ok));
-            }
+            Guard(controller, request, ok);
 
             if (!controller.ModelState.IsValid)
             {
@@ -68,11 +71,6 @@
             var result = await request();
             return GetResultAction(controller, result) ?? ok(result.Value);
         }
-
-        public static Task<IActionResult> Result<TValue>(
-            this ControllerBase controller,
-            Func<Task<Result<TValue>>> request) =>
-            Result(controller, request, value => controller.Ok(value));
 
         private static IActionResult? GetResultAction(ControllerBase controller, Result result)
         {
@@ -105,6 +103,24 @@
             }
 
             return null;
+        }
+
+        private static void Guard(object controller, object request, object ok)
+        {
+            if (controller is null)
+            {
+                throw new ArgumentNullException(nameof(controller));
+            }
+
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            if (ok is null)
+            {
+                throw new ArgumentNullException(nameof(ok));
+            }
         }
     }
 }
