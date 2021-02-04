@@ -70,12 +70,6 @@
         public static Result Invalid(string key, string error) =>
             Invalid(key, new[] { error });
 
-        public static Result Invalid(params string[] errors) =>
-            Invalid(string.Empty, errors);
-
-        public static Result Invalid(IEnumerable<string> errors) =>
-            Invalid(string.Empty, errors.ToArray());
-
         public static Result Invalid(string key, params string[] errors) =>
             Invalid(new Dictionary<string, string[]> { { key, errors } });
 
@@ -94,11 +88,11 @@
         public static Result<T> Invalid<T>(string key, string error) =>
             Invalid<T>(key, new[] { error });
 
-        public static Result<T> Invalid<T>(params string[] errors) =>
-            Invalid<T>(string.Empty, errors);
-
         public static Result<T> Invalid<T>(string key, params string[] errors) =>
             Invalid<T>(new Dictionary<string, string[]> { { key, errors } });
+
+        public static Result<T> Invalid<T>(string key, IEnumerable<string> errors) =>
+            Invalid<T>(new Dictionary<string, string[]> { { key, errors.ToArray() } });
 
         public static Result<T> Invalid<T>(IEnumerable<KeyValuePair<string, string[]>> validationErrors) =>
             new InvalidResult<T>(validationErrors);
