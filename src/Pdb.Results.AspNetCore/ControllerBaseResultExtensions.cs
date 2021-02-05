@@ -93,7 +93,7 @@
                         controller.ModelState.AddModelError(error.Key, errorMessage);
                     }
 
-                    return controller.BadRequest();
+                    return controller.ValidationProblem();
                 }
             }
 
