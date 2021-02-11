@@ -49,7 +49,7 @@
 
             if (!controller.ModelState.IsValid)
             {
-                return controller.BadRequest();
+                return controller.ValidationProblem();
             }
 
             var result = await request();
