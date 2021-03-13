@@ -9,41 +9,30 @@
         public static Task<IActionResult> Result(
             this ControllerBase controller,
             Func<Task<Result>> request,
-            Func<IActionResult> ok) =>
+            Func<Result, IActionResult>? ok = default,
+            Func<Result, IActionResult>? error = default) =>
             ResultCore(
                 controller,
                 request,
-                ok);
+                ok ?? controller.GetSuccessActionResult,
+                error ?? controller.GetErrorActionResult);
 
-        public static Task<IActionResult> Result(
+        public static Task<IActionResult> Result<T>(
             this ControllerBase controller,
-            Func<Task<Result>> request) =>
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult>? ok = default,
+            Func<Result<T>, IActionResult>? error = default) =>
             ResultCore(
                 controller,
                 request,
-                () => controller.Ok());
-
-        public static Task<IActionResult> Result<TValue>(
-            this ControllerBase controller,
-            Func<Task<Result<TValue>>> request,
-            Func<TValue, IActionResult> ok) =>
-            ResultCore(
-                controller,
-                request,
-                ok);
-
-        public static Task<IActionResult> Result<TValue>(
-            this ControllerBase controller,
-            Func<Task<Result<TValue>>> request) =>
-            ResultCore(
-                controller,
-                request,
-                value => controller.Ok(value));
+                ok ?? controller.GetSuccessActionResult,
+                error ?? controller.GetErrorActionResult);
 
         private static async Task<IActionResult> ResultCore(
             this ControllerBase controller,
             Func<Task<Result>> request,
-            Func<IActionResult> ok)
+            Func<Result, IActionResult> ok,
+            Func<Result, IActionResult> error)
         {
             Guard(controller, request, ok);
 
@@ -53,13 +42,20 @@
             }
 
             var result = await request();
-            return GetResultAction(controller, result) ?? ok();
+            
+            if (result.IsSuccessful)
+            {
+                return ok(result);
+            }
+
+            return error(result);
         }
 
         private static async Task<IActionResult> ResultCore<TValue>(
             this ControllerBase controller,
             Func<Task<Result<TValue>>> request,
-            Func<TValue, IActionResult> ok)
+            Func<Result<TValue>, IActionResult> ok,
+            Func<Result<TValue>, IActionResult> error)
         {
             Guard(controller, request, ok);
 
@@ -69,41 +65,23 @@
             }
 
             var result = await request();
-            return GetResultAction(controller, result) ?? ok(result.Value);
+
+            if (result.IsSuccessful)
+            {
+                return ok(result);
+            }
+
+            return error(result);
         }
 
-        private static IActionResult? GetResultAction(ControllerBase controller, Result result)
-        {
-            if (result.Status == ResultStatus.NotFound)
-            {
-                return controller.NotFound();
-            }
+        private static IActionResult GetSuccessActionResult(this ControllerBase controller, Result result) =>
+            result.GetSuccessActionResult(controller);
 
-            if (result.Status == ResultStatus.Forbidden)
-            {
-                return controller.Forbid();
-            }
+        private static IActionResult GetSuccessActionResult<T>(this ControllerBase controller, Result<T> result) =>
+            result.GetSuccessActionResult(controller);
 
-            if (result.Status == ResultStatus.Invalid)
-            {
-                foreach (var error in result.ValidationErrors)
-                {
-                    foreach (var errorMessage in error.Value)
-                    {
-                        controller.ModelState.AddModelError(error.Key, errorMessage);
-                    }
-
-                    return controller.ValidationProblem();
-                }
-            }
-
-            if (result.Status == ResultStatus.Error)
-            {
-                return controller.BadRequest(result.Problem ?? result.Errors);
-            }
-
-            return null;
-        }
+        private static IActionResult GetErrorActionResult(this ControllerBase controller, Result result) =>
+            result.GetErrorActionResult(controller);
 
         private static void Guard(object controller, object request, object ok)
         {
