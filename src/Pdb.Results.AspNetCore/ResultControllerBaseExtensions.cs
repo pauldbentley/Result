@@ -7,11 +7,36 @@
     {
         public static IActionResult GetActionResult(this Result result, ControllerBase controller)
         {
-            if (result.Status == ResultStatus.Ok)
+            if (result.IsSuccessful)
+            {
+                return result.GetSuccessActionResult(controller);
+            }
+
+            return result.GetErrorActionResult(controller);
+        }
+
+        public static IActionResult GetSuccessActionResult(this Result result, ControllerBase controller)
+        {
+            if (result.IsSuccessful)
             {
                 return controller.Ok();
             }
 
+            return controller.BadRequest();
+        }
+
+        public static IActionResult GetSuccessActionResult<T>(this Result<T> result, ControllerBase controller)
+        {
+            if (result.IsSuccessful)
+            {
+                return controller.Ok(result.Value);
+            }
+
+            return controller.BadRequest();
+        }
+
+        public static IActionResult GetErrorActionResult(this Result result, ControllerBase controller)
+        {
             if (result.Status == ResultStatus.NotFound)
             {
                 return controller.NotFound();
