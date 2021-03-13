@@ -2,13 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class Result
     {
-        private readonly List<string> _errors = new List<string>();
+        private readonly List<string> _errors = new();
 
-        private readonly Dictionary<string, string[]> _validationErrors = new Dictionary<string, string[]>();
+        private readonly List<ValidationError> _validationErrors = new();
 
         protected Result(ResultStatus status)
         {
@@ -17,9 +16,9 @@
 
         public ResultStatus Status { get; }
 
-        public IEnumerable<string> Errors => _errors;
+        public IReadOnlyList<string> Errors => _errors;
 
-        public IReadOnlyDictionary<string, string[]> ValidationErrors => _validationErrors;
+        public IReadOnlyList<ValidationError> ValidationErrors => _validationErrors;
 
         public bool IsSuccessful => Status == ResultStatus.Ok;
 
@@ -34,6 +33,9 @@
         public static Result Error() =>
             new ErrorResult();
 
+        public static Result Error(string error) =>
+            new ErrorResult(error);
+
         public static Result Error(params string[] errors) =>
             new ErrorResult(errors);
 
@@ -45,6 +47,9 @@
 
         public static Result<T> Error<T>() =>
             new ErrorResult<T>();
+
+        public static Result<T> Error<T>(string error) =>
+            new ErrorResult<T>(error);
 
         public static Result<T> Error<T>(params string[] errors) =>
             new ErrorResult<T>(errors);
@@ -65,36 +70,30 @@
             new InvalidResult();
 
         public static Result Invalid(string error) =>
-            Invalid(string.Empty, new[] { error });
+            new InvalidResult(error);
 
-        public static Result Invalid(string key, string error) =>
-            Invalid(key, new[] { error });
+        public static Result Invalid(string identifier, string error) =>
+            new InvalidResult(identifier, error);
 
-        public static Result Invalid(string key, params string[] errors) =>
-            Invalid(new Dictionary<string, string[]> { { key, errors } });
+        public static Result Invalid(ValidationError validationError) =>
+             new InvalidResult(validationError);
 
-        public static Result Invalid(string key, IEnumerable<string> errors) =>
-            Invalid(new Dictionary<string, string[]> { { key, errors.ToArray() } });
-
-        public static Result Invalid(IEnumerable<KeyValuePair<string, string[]>> validationErrors) =>
+        public static Result Invalid(IEnumerable<ValidationError> validationErrors) =>
             new InvalidResult(validationErrors);
 
         public static Result<T> Invalid<T>() =>
             new InvalidResult<T>();
 
         public static Result<T> Invalid<T>(string error) =>
-            Invalid<T>(string.Empty, new[] { error });
+            new InvalidResult<T>(error);
 
-        public static Result<T> Invalid<T>(string key, string error) =>
-            Invalid<T>(key, new[] { error });
+        public static Result<T> Invalid<T>(string identifier, string error) =>
+            new InvalidResult<T>(identifier, error);
 
-        public static Result<T> Invalid<T>(string key, params string[] errors) =>
-            Invalid<T>(new Dictionary<string, string[]> { { key, errors } });
+        public static Result<T> Invalid<T>(ValidationError validationError) =>
+             new InvalidResult<T>(validationError);
 
-        public static Result<T> Invalid<T>(string key, IEnumerable<string> errors) =>
-            Invalid<T>(new Dictionary<string, string[]> { { key, errors.ToArray() } });
-
-        public static Result<T> Invalid<T>(IEnumerable<KeyValuePair<string, string[]>> validationErrors) =>
+        public static Result<T> Invalid<T>(IEnumerable<ValidationError> validationErrors) =>
             new InvalidResult<T>(validationErrors);
 
         public static Result NotFound() =>
@@ -102,6 +101,11 @@
 
         public static Result<T> NotFound<T>() =>
             new NotFoundResult<T>();
+
+        protected void AddError(string error)
+        {
+            _errors.Add(error);
+        }
 
         protected void AddErrors(IEnumerable<string> errors)
         {
@@ -112,11 +116,21 @@
 
             foreach (string error in errors)
             {
-                _errors.Add(error);
+                AddError(error);
             }
         }
 
-        protected void AddValidationErrors(IEnumerable<KeyValuePair<string, string[]>> validationErrors)
+        protected void AddValidationError(ValidationError validationError)
+        {
+            if (validationError is null)
+            {
+                throw new ArgumentNullException(nameof(validationError));
+            }
+
+            _validationErrors.Add(validationError);
+        }
+
+        protected void AddValidationErrors(IEnumerable<ValidationError> validationErrors)
         {
             if (validationErrors == null)
             {
@@ -125,7 +139,7 @@
 
             foreach (var validationError in validationErrors)
             {
-                _validationErrors.Add(validationError.Key, validationError.Value);
+                AddValidationError(validationError);
             }
         }
     }

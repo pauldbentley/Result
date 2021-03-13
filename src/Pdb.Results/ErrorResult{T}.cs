@@ -10,14 +10,20 @@
         {
         }
 
+        public ErrorResult(string error)
+            : this()
+        {
+            AddError(error);
+        }
+
         public ErrorResult(IEnumerable<string> errors)
-            : base(ResultStatus.Error)
+            : this()
         {
             AddErrors(errors);
         }
 
         public ErrorResult(object error)
-            : base(ResultStatus.Error)
+            : this()
         {
             Problem = error ?? throw new ArgumentNullException(nameof(error));
         }
