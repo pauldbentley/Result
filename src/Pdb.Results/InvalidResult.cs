@@ -4,23 +4,6 @@
 
     internal class InvalidResult : Result
     {
-        public InvalidResult()
-            : base(ResultStatus.Invalid)
-        {
-        }
-
-        public InvalidResult(string error)
-            : this()
-        {
-            AddValidationError(new ValidationError(null, error));
-        }
-
-        public InvalidResult(string identifer, string error)
-            : this()
-        {
-            AddValidationError(new ValidationError(identifer, error));
-        }
-
         public InvalidResult(ValidationError validationError)
             : this()
         {
@@ -31,6 +14,11 @@
             : this()
         {
             AddValidationErrors(validationErrors);
+        }
+
+        private InvalidResult()
+            : base(ResultStatus.Invalid)
+        {
         }
     }
 }

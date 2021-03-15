@@ -2,14 +2,14 @@
 {
     public class ValidationError
     {
-        public ValidationError(string? identifier, string errorMessage)
+        public ValidationError(string identifier, string message)
         {
             Identifier = identifier;
-            ErrorMessage = errorMessage;
+            Message = message;
         }
 
-        public string? Identifier { get; }
+        public string Identifier { get; }
 
-        public string ErrorMessage { get; }
+        public string Message { get; }
     }
 }

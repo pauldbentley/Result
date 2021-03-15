@@ -5,17 +5,6 @@
 
     internal class ErrorResult : Result
     {
-        public ErrorResult()
-            : base(ResultStatus.Error)
-        {
-        }
-
-        public ErrorResult(string error)
-            : this()
-        {
-            AddError(error);
-        }
-
         public ErrorResult(IEnumerable<string> errors)
             : this()
         {
@@ -26,6 +15,11 @@
             : this()
         {
             Problem = problem ?? throw new ArgumentNullException(nameof(problem));
+        }
+
+        private ErrorResult()
+            : base(ResultStatus.Error)
+        {
         }
     }
 }
