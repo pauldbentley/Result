@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.AspNetCore.Mvc.RazorPages
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Pdb.Results;
 
@@ -320,7 +321,7 @@
 
             if (!page.ModelState.IsValid)
             {
-                await error(Pdb.Results.Result.Invalid());
+                //await error(Pdb.Results.Result.Invalid());
                 return page.Page();
             }
 
@@ -346,7 +347,7 @@
 
             if (!page.ModelState.IsValid)
             {
-                await error(Pdb.Results.Result.Invalid());
+                // await error(Pdb.Results.Result.Invalid());
                 return page.Page();
             }
 
@@ -379,7 +380,16 @@
 
             if (result.Status == ResultStatus.Invalid)
             {
-                foreach (var error in result.ValidationErrors)
+                var validationErrors = result
+                    .ValidationErrors
+                    .GroupBy(e => e.Identifier)
+                    .Select(e => new
+                    {
+                        e.Key,
+                        Value = e.Select(e => e.Message)
+                    });
+
+                foreach (var error in validationErrors)
                 {
                     string? key = !string.IsNullOrEmpty(error.Key)
                         ? modelPrefix != null ? modelPrefix + "." + error.Key : error.Key
@@ -398,9 +408,6 @@
 
             if (result.Status == ResultStatus.Error)
             {
-                page.ViewData["Error"] = result.Problem;
-                page.ViewData["Errors"] = result.Errors;
-
                 foreach (var error in result.Errors)
                 {
                     page.ModelState.AddModelError(string.Empty, error);

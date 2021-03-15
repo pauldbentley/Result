@@ -76,7 +76,10 @@ namespace Pdb.Results.Tests
         {
             hasErrors.ShouldBe(errors.Length > 0);
 
-            var actual = Result.Invalid(errors);
+            var validationErrors = errors
+                .Select(e => new ValidationError(string.Empty, e));
+
+            var actual = Result.Invalid(validationErrors);
 
             actual.ShouldBeInvalidResult();
             actual.ValidationErrors.Count.ShouldBe(errors.Length);

@@ -74,14 +74,17 @@
             return error(result);
         }
 
+        private static IActionResult ToActionResult(this ControllerBase controller, Result result) =>
+            result.ToActionResult(controller);
+
         private static IActionResult GetSuccessActionResult(this ControllerBase controller, Result result) =>
-            result.GetSuccessActionResult(controller);
+            result.ToSuccessActionResult(controller);
 
         private static IActionResult GetSuccessActionResult<T>(this ControllerBase controller, Result<T> result) =>
-            result.GetSuccessActionResult(controller);
+            result.ToSuccessActionResult(controller);
 
         private static IActionResult GetErrorActionResult(this ControllerBase controller, Result result) =>
-            result.GetErrorActionResult(controller);
+            result.ToErrorActionResult(controller);
 
         private static void Guard(object controller, object request, object ok)
         {

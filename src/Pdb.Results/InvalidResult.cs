@@ -4,12 +4,6 @@
 
     internal class InvalidResult : Result
     {
-        public InvalidResult(ValidationError validationError)
-            : this()
-        {
-            AddValidationError(validationError);
-        }
-
         public InvalidResult(IEnumerable<ValidationError> validationErrors)
             : this()
         {

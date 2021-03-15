@@ -1,31 +1,50 @@
 ﻿namespace Microsoft.AspNetCore.Mvc
 {
+    using System;
     using System.Linq;
     using Pdb.Results;
 
     public static class ResultControllerBaseExtensions
     {
-        public static IActionResult GetActionResult(this Result result, ControllerBase controller)
+        public static IActionResult ToActionResult(this Result result, ControllerBase controller) =>
+            result.ToActionResult(
+                controller,
+                result.ToSuccessActionResult,
+                result.ToErrorActionResult);
+
+        public static IActionResult ToActionResult(
+            this Result result,
+            ControllerBase controller,
+            Func<ControllerBase, IActionResult> ok)
         {
             if (result.IsSuccessful)
             {
-                return result.GetSuccessActionResult(controller);
+                return ok(controller);
             }
 
-            return result.GetErrorActionResult(controller);
+            return result.ToErrorActionResult(controller);
         }
 
-        public static IActionResult GetSuccessActionResult(this Result result, ControllerBase controller)
+        public static IActionResult ToActionResult(
+            this Result result,
+            ControllerBase controller,
+            Func<ControllerBase, IActionResult> ok,
+            Func<ControllerBase, IActionResult> error)
         {
             if (result.IsSuccessful)
             {
-                return controller.Ok();
+                return ok(controller);
             }
 
-            return controller.BadRequest();
+            return error(controller);
         }
 
-        public static IActionResult GetSuccessActionResult<T>(this Result<T> result, ControllerBase controller)
+        public static IActionResult ToSuccessActionResult(this Result result, ControllerBase controller)
+        {
+            return controller.Ok();
+        }
+
+        public static IActionResult ToSuccessActionResult<T>(this Result<T> result, ControllerBase controller)
         {
             if (result.IsSuccessful)
             {
@@ -35,7 +54,7 @@
             return controller.BadRequest();
         }
 
-        public static IActionResult GetErrorActionResult(this Result result, ControllerBase controller)
+        public static IActionResult ToErrorActionResult(this Result result, ControllerBase controller)
         {
             if (result.Status == ResultStatus.NotFound)
             {
@@ -55,14 +74,14 @@
                     .Select(e => new
                     {
                         e.Key,
-                        Value = e.Select(e => e.ErrorMessage)
+                        Value = e.Select(e => e.Message)
                     });
 
                 foreach (var error in validationErrors)
                 {
                     foreach (var errorMessage in error.Value)
                     {
-                        controller.ModelState.AddModelError(error.Key, errorMessage);
+                        controller.ModelState.AddModelError(error.Key ?? string.Empty, errorMessage ?? string.Empty);
                     }
                 }
 
@@ -71,7 +90,17 @@
 
             if (result.Status == ResultStatus.Error)
             {
-                return controller.BadRequest(result.Problem ?? result.Errors);
+                if (result.Problem != null)
+                {
+                    return controller.BadRequest(result.Problem);
+                }
+
+                if (result.Errors.Count > 0)
+                {
+                    return controller.BadRequest(result.Errors);
+                }
+
+                controller.BadRequest();
             }
 
             return controller.BadRequest();

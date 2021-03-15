@@ -55,22 +55,13 @@
         public static Result<T> Forbidden<T>() =>
             new ForbiddenResult<T>();
 
-        public static Result Invalid(params string[] errorMessages) =>
-            new InvalidResult(errorMessages.Select(error => new ValidationError(string.Empty, error)));
-
-        public static Result Invalid(ValidationError validationError) =>
-             new InvalidResult(validationError);
-
         public static Result Invalid(params ValidationError[] validationErrors) =>
             new InvalidResult(validationErrors);
 
         public static Result Invalid(IEnumerable<ValidationError> validationErrors) =>
             new InvalidResult(validationErrors);
 
-        public static Result<T> Invalid<T>(params string[] errorMessages) =>
-            new InvalidResult<T>(errorMessages.Select(error => new ValidationError(string.Empty, error)));
-
-        public static Result<T> Invalid<T>(ValidationError validationError) =>
+        public static Result<T> Invalid<T>(params ValidationError[] validationError) =>
              new InvalidResult<T>(validationError);
 
         public static Result<T> Invalid<T>(IEnumerable<ValidationError> validationErrors) =>

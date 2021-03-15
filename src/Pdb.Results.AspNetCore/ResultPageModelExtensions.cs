@@ -6,7 +6,7 @@
 
     public static class ResultPageModelExtensions
     {
-        public static IActionResult GetActionResult(
+        public static IActionResult ToActionResult(
             this Result result,
             PageModel page,
             string? modelPrefix = null)
@@ -29,7 +29,7 @@
                     .Select(e => new
                     {
                         e.Key,
-                        Value = e.Select(e => e.ErrorMessage)
+                        Value = e.Select(e => e.Message)
                     });
 
                 foreach (var error in validationErrors)
