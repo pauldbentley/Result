@@ -16,5 +16,13 @@
                 collection.Add(identifier, errorMessage);
             }
         }
+
+        public static void Add(this ICollection<ValidationError> collection, string identifier, IEnumerable<string> errorMessages)
+        {
+            foreach (var errorMessage in errorMessages)
+            {
+                collection.Add(identifier, errorMessage);
+            }
+        }
     }
 }
