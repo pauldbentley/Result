@@ -33,11 +33,6 @@
                 throw new ArgumentNullException(nameof(errors));
             }
 
-            if (errors.Length == 0)
-            {
-                throw new ArgumentException(null, nameof(errors));
-            }
-
             return new(ResultStatus.Error)
             {
                 Errors = errors,
@@ -49,11 +44,6 @@
             if (errors is null)
             {
                 throw new ArgumentNullException(nameof(errors));
-            }
-
-            if (!errors.Any())
-            {
-                throw new ArgumentException(null, nameof(errors));
             }
 
             return new(ResultStatus.Error)
@@ -82,11 +72,6 @@
                 throw new ArgumentNullException(nameof(errors));
             }
 
-            if (errors.Length == 0)
-            {
-                throw new ArgumentException(null, nameof(errors));
-            }
-
             return new(ResultStatus.Error)
             {
                 Errors = errors,
@@ -98,11 +83,6 @@
             if (errors is null)
             {
                 throw new ArgumentNullException(nameof(errors));
-            }
-
-            if (!errors.Any())
-            {
-                throw new ArgumentException(null, nameof(errors));
             }
 
             return new(ResultStatus.Error)
@@ -137,11 +117,6 @@
                 throw new ArgumentNullException(nameof(validationErrors));
             }
 
-            if (validationErrors.Length == 0)
-            {
-                throw new ArgumentException(null, nameof(validationErrors));
-            }
-
             return new(ResultStatus.Invalid)
             {
                 ValidationErrors = validationErrors,
@@ -153,11 +128,6 @@
             if (validationErrors is null)
             {
                 throw new ArgumentNullException(nameof(validationErrors));
-            }
-
-            if (!validationErrors.Any())
-            {
-                throw new ArgumentException(null, nameof(validationErrors));
             }
 
             return new(ResultStatus.Invalid)
@@ -173,11 +143,6 @@
                 throw new ArgumentNullException(nameof(validationErrors));
             }
 
-            if (validationErrors.Length == 0)
-            {
-                throw new ArgumentException(null, nameof(validationErrors));
-            }
-
             return new(ResultStatus.Invalid)
              {
                  ValidationErrors = validationErrors,
@@ -189,11 +154,6 @@
             if (validationErrors is null)
             {
                 throw new ArgumentNullException(nameof(validationErrors));
-            }
-
-            if (!validationErrors.Any())
-            {
-                throw new ArgumentException(null, nameof(validationErrors));
             }
 
             return new(ResultStatus.Invalid)
