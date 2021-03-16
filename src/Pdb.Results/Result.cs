@@ -1,6 +1,8 @@
 ﻿namespace Pdb.Results
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class Result
     {
@@ -24,41 +26,103 @@
         public static Result<T> Ok<T>(T value) =>
             new(ResultStatus.Ok, value);
 
-        public static Result Error(params string[] errors) =>
-            new(ResultStatus.Error)
+        public static Result Error(params string[] errors)
+        {
+            if (errors is null)
+            {
+                throw new ArgumentNullException(nameof(errors));
+            }
+
+            if (errors.Length == 0)
+            {
+                throw new ArgumentException(null, nameof(errors));
+            }
+
+            return new(ResultStatus.Error)
             {
                 Errors = errors,
             };
+        }
 
-        public static Result Error(IReadOnlyList<string> errors) =>
-            new(ResultStatus.Error)
+        public static Result Error(IEnumerable<string> errors)
+        {
+            if (errors is null)
+            {
+                throw new ArgumentNullException(nameof(errors));
+            }
+
+            if (!errors.Any())
+            {
+                throw new ArgumentException(null, nameof(errors));
+            }
+
+            return new(ResultStatus.Error)
             {
                 Errors = errors,
             };
+        }
 
-        public static Result Error(object problem) =>
-            new(ResultStatus.Error)
+        public static Result Error(object problem)
+        {
+            if (problem is null)
+            {
+                throw new ArgumentNullException(nameof(problem));
+            }
+
+            return new(ResultStatus.Error)
             {
                 Problem = problem,
             };
+        }
 
-        public static Result<T> Error<T>(params string[] errors) =>
-            new(ResultStatus.Error)
+        public static Result<T> Error<T>(params string[] errors)
+        {
+            if (errors is null)
+            {
+                throw new ArgumentNullException(nameof(errors));
+            }
+
+            if (errors.Length == 0)
+            {
+                throw new ArgumentException(null, nameof(errors));
+            }
+
+            return new(ResultStatus.Error)
             {
                 Errors = errors,
             };
+        }
 
-        public static Result<T> Error<T>(IEnumerable<string> errors) =>
-            new(ResultStatus.Error)
+        public static Result<T> Error<T>(IEnumerable<string> errors)
+        {
+            if (errors is null)
+            {
+                throw new ArgumentNullException(nameof(errors));
+            }
+
+            if (!errors.Any())
+            {
+                throw new ArgumentException(null, nameof(errors));
+            }
+
+            return new(ResultStatus.Error)
             {
                 Errors = errors,
             };
+        }
 
-        public static Result<T> Error<T>(object problem) =>
-            new(ResultStatus.Error)
+        public static Result<T> Error<T>(object problem)
+        {
+            if (problem is null)
+            {
+                throw new ArgumentNullException(nameof(problem));
+            }
+
+            return new(ResultStatus.Error)
             {
                 Problem = problem,
             };
+        }
 
         public static Result Forbidden() =>
             new(ResultStatus.Forbidden);
@@ -66,29 +130,77 @@
         public static Result<T> Forbidden<T>() =>
             new(ResultStatus.Forbidden);
 
-        public static Result Invalid(params ValidationError[] validationErrors) =>
-            new(ResultStatus.Invalid)
+        public static Result Invalid(params ValidationError[] validationErrors)
+        {
+            if (validationErrors is null)
+            {
+                throw new ArgumentNullException(nameof(validationErrors));
+            }
+
+            if (validationErrors.Length == 0)
+            {
+                throw new ArgumentException(null, nameof(validationErrors));
+            }
+
+            return new(ResultStatus.Invalid)
             {
                 ValidationErrors = validationErrors,
             };
+        }
 
-        public static Result Invalid(IEnumerable<ValidationError> validationErrors) =>
-            new(ResultStatus.Invalid)
+        public static Result Invalid(IEnumerable<ValidationError> validationErrors)
+        {
+            if (validationErrors is null)
+            {
+                throw new ArgumentNullException(nameof(validationErrors));
+            }
+
+            if (!validationErrors.Any())
+            {
+                throw new ArgumentException(null, nameof(validationErrors));
+            }
+
+            return new(ResultStatus.Invalid)
             {
                 ValidationErrors = validationErrors,
             };
+        }
 
-        public static Result<T> Invalid<T>(params ValidationError[] validationErrors) =>
-             new(ResultStatus.Invalid)
+        public static Result<T> Invalid<T>(params ValidationError[] validationErrors)
+        {
+            if (validationErrors is null)
+            {
+                throw new ArgumentNullException(nameof(validationErrors));
+            }
+
+            if (validationErrors.Length == 0)
+            {
+                throw new ArgumentException(null, nameof(validationErrors));
+            }
+
+            return new(ResultStatus.Invalid)
              {
                  ValidationErrors = validationErrors,
              };
+        }
 
-        public static Result<T> Invalid<T>(IEnumerable<ValidationError> validationErrors) =>
-            new(ResultStatus.Invalid)
+        public static Result<T> Invalid<T>(IEnumerable<ValidationError> validationErrors)
+        {
+            if (validationErrors is null)
+            {
+                throw new ArgumentNullException(nameof(validationErrors));
+            }
+
+            if (!validationErrors.Any())
+            {
+                throw new ArgumentException(null, nameof(validationErrors));
+            }
+
+            return new(ResultStatus.Invalid)
             {
                 ValidationErrors = validationErrors,
             };
+        }
 
         public static Result NotFound() =>
             new(ResultStatus.NotFound);
