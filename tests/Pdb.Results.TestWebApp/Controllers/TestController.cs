@@ -9,9 +9,19 @@
     public class TestController : ControllerBase
     {
         [HttpGet("Ok")]
-        public IActionResult OkResult(Guid? id) =>
+        public IActionResult OkResult() =>
             Result
                 .Ok()
+                .ToActionResult(this);
+
+        [HttpGet("OkWithValue")]
+        public IActionResult OkWithValueResult() =>
+            Result
+                .Ok(new
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Ok with value",
+                })
                 .ToActionResult(this);
 
         [HttpGet("NotFound")]
