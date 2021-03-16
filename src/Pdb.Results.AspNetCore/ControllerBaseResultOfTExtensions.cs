@@ -4,33 +4,33 @@
     using System.Threading.Tasks;
     using Pdb.Results;
 
-    public static class ControllerBaseResultExtensions
+    public static class ControllerBaseResultOfTExtensions
     {
-        public static Task<IActionResult> Result(
+        public static Task<IActionResult> Result<T>(
             this ControllerBase controller,
-            Func<Task<Result>> request) =>
+            Func<Task<Result<T>>> request) =>
             ResultCore(
                 controller,
                 request,
                 r => r.ToSuccessActionResult(controller),
                 r => r.ToErrorActionResult(controller));
 
-        public static Task<IActionResult> Result(
+        public static Task<IActionResult> Result<T>(
             this ControllerBase controller,
-            Func<Task<Result>> request,
-            Func<Result, IActionResult>? ok = default,
-            Func<Result, IActionResult>? error = default) =>
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult>? ok = default,
+            Func<Result<T>, IActionResult>? error = default) =>
             ResultCore(
                 controller,
                 request,
                 ok ?? (r => r.ToSuccessActionResult(controller)),
                 error ?? (r => r.ToErrorActionResult(controller)));
 
-        private static async Task<IActionResult> ResultCore(
+        private static async Task<IActionResult> ResultCore<T>(
             this ControllerBase controller,
-            Func<Task<Result>> request,
-            Func<Result, IActionResult> ok,
-            Func<Result, IActionResult> error)
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult> ok,
+            Func<Result<T>, IActionResult> error)
         {
             Guard(controller, request, ok);
 
@@ -40,7 +40,7 @@
             }
 
             var result = await request();
-            
+
             if (result.IsSuccessful)
             {
                 return ok(result);
