@@ -1,109 +1,99 @@
 ﻿namespace Pdb.Results
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class Result
     {
-        private readonly List<string> _errors = new();
-
-        private readonly List<ValidationError> _validationErrors = new();
-
-        protected Result(ResultStatus status)
+        public Result(ResultStatus status)
         {
             Status = status;
         }
 
         public ResultStatus Status { get; }
 
-        public IReadOnlyList<string> Errors => _errors;
+        public IEnumerable<string> Errors { get; private set; } = new List<string>();
 
-        public IReadOnlyList<ValidationError> ValidationErrors => _validationErrors;
+        public IEnumerable<ValidationError> ValidationErrors { get; private set; } = new List<ValidationError>();
 
         public bool IsSuccessful => Status == ResultStatus.Ok;
 
-        public object Problem { get; protected set; } = default!;
+        public object Problem { get; private set; } = default!;
 
-        public static Result Ok() =>
-            new OkResult();
+        public static Result Ok() => new(ResultStatus.Ok);
 
         public static Result<T> Ok<T>(T value) =>
-            new OkResult<T>(value);
+            new(ResultStatus.Ok, value);
 
         public static Result Error(params string[] errors) =>
-            new ErrorResult(errors);
+            new(ResultStatus.Error)
+            {
+                Errors = errors,
+            };
 
-        public static Result Error(IEnumerable<string> errors) =>
-            new ErrorResult(errors);
+        public static Result Error(IReadOnlyList<string> errors) =>
+            new(ResultStatus.Error)
+            {
+                Errors = errors,
+            };
 
         public static Result Error(object problem) =>
-            new ErrorResult(problem);
+            new(ResultStatus.Error)
+            {
+                Problem = problem,
+            };
 
         public static Result<T> Error<T>(params string[] errors) =>
-            new ErrorResult<T>(errors);
+            new(ResultStatus.Error)
+            {
+                Errors = errors,
+            };
 
         public static Result<T> Error<T>(IEnumerable<string> errors) =>
-            new ErrorResult<T>(errors);
+            new(ResultStatus.Error)
+            {
+                Errors = errors,
+            };
 
         public static Result<T> Error<T>(object problem) =>
-            new ErrorResult<T>(problem);
+            new(ResultStatus.Error)
+            {
+                Problem = problem,
+            };
 
         public static Result Forbidden() =>
-            new ForbiddenResult();
+            new(ResultStatus.Forbidden);
 
         public static Result<T> Forbidden<T>() =>
-            new ForbiddenResult<T>();
+            new(ResultStatus.Forbidden);
 
         public static Result Invalid(params ValidationError[] validationErrors) =>
-            new InvalidResult(validationErrors);
+            new(ResultStatus.Invalid)
+            {
+                ValidationErrors = validationErrors,
+            };
 
         public static Result Invalid(IEnumerable<ValidationError> validationErrors) =>
-            new InvalidResult(validationErrors);
+            new(ResultStatus.Invalid)
+            {
+                ValidationErrors = validationErrors,
+            };
 
-        public static Result<T> Invalid<T>(params ValidationError[] validationError) =>
-             new InvalidResult<T>(validationError);
+        public static Result<T> Invalid<T>(params ValidationError[] validationErrors) =>
+             new(ResultStatus.Invalid)
+             {
+                 ValidationErrors = validationErrors,
+             };
 
         public static Result<T> Invalid<T>(IEnumerable<ValidationError> validationErrors) =>
-            new InvalidResult<T>(validationErrors);
+            new(ResultStatus.Invalid)
+            {
+                ValidationErrors = validationErrors,
+            };
 
         public static Result NotFound() =>
-            new NotFoundResult();
+            new(ResultStatus.NotFound);
 
         public static Result<T> NotFound<T>() =>
-            new NotFoundResult<T>();
-
-        protected void AddErrors(IEnumerable<string> errors)
-        {
-            if (errors == null)
-            {
-                throw new ArgumentNullException(nameof(errors));
-            }
-
-            _errors.AddRange(errors);
-        }
-
-        protected void AddValidationError(ValidationError validationError)
-        {
-            if (validationError is null)
-            {
-                throw new ArgumentNullException(nameof(validationError));
-            }
-
-            _validationErrors.Add(validationError);
-        }
-
-        protected void AddValidationErrors(IEnumerable<ValidationError> validationErrors)
-        {
-            if (validationErrors == null)
-            {
-                throw new ArgumentNullException(nameof(validationErrors));
-            }
-
-            foreach (var validationError in validationErrors)
-            {
-                AddValidationError(validationError);
-            }
-        }
+            new(ResultStatus.NotFound);
     }
 }

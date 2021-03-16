@@ -1,22 +1,41 @@
 ﻿namespace Pdb.Results
 {
+    using System;
+
     public class Result<T> : Result
     {
-        protected Result(ResultStatus status)
+        public Result(ResultStatus status)
             : base(status)
         {
+            if (status == ResultStatus.Ok)
+            {
+                throw new InvalidOperationException();
+            }
+
+            Value = default!;
         }
 
-        public T Value { get; protected set; } = default!;
+        public Result(ResultStatus status, T value)
+            : base(status)
+        {
+            if (status == ResultStatus.Ok && value is null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            Value = value;
+        }
+
+        public T Value { get; private set; }
 
         public static implicit operator Result<T>(T value)
         {
             if (value != null)
             {
-                return new OkResult<T>(value);
+                return new(ResultStatus.Ok, value);
             }
 
-            return new NotFoundResult<T>();
+            return new(ResultStatus.NotFound);
         }
 
         public static implicit operator T(Result<T> result) => result.Value;

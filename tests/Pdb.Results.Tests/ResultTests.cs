@@ -20,7 +20,7 @@ namespace Pdb.Results.Tests
         public void Should_create_error_result()
         {
             var actual = Result.Error();
-            
+
             actual.ShouldBeErrorResult();
             actual.Errors.ShouldBeEmpty();
             actual.Problem.ShouldBeNull();
@@ -39,10 +39,6 @@ namespace Pdb.Results.Tests
             actual.ShouldBeErrorResult();
             actual.Errors.ShouldBeEmpty();
             actual.Problem.ShouldBe(problem);
-
-
-            object? nullProblem = null;
-            Should.Throw<ArgumentNullException>(() => Result.Error(nullProblem!));
         }
 
         [Theory]
@@ -82,7 +78,6 @@ namespace Pdb.Results.Tests
             var actual = Result.Invalid(validationErrors);
 
             actual.ShouldBeInvalidResult();
-            actual.ValidationErrors.Count.ShouldBe(errors.Length);
             actual.ValidationErrors.ShouldAllBe(e => e.Identifier == string.Empty);
             var actualErrors = actual.ValidationErrors.Select(e => e.Message);
             actualErrors.ShouldBe(errors);
@@ -101,7 +96,7 @@ namespace Pdb.Results.Tests
             var actual = Result.Invalid(validationErrors);
 
             actual.ShouldBeInvalidResult();
-            actual.ValidationErrors.Count.ShouldBe(5);
+            actual.ValidationErrors.Count().ShouldBe(5);
 
             var a = actual.ValidationErrors.Where(e => e.Identifier == "a").Select(e => e.Message);
             a.ShouldBe(new[] { "1", "2", "3", "4" });

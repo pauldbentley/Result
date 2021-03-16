@@ -123,7 +123,7 @@
                     return controller.BadRequest(result.Problem);
                 }
 
-                if (result.Errors.Count > 0)
+                if (result.Errors.Any())
                 {
                     return controller.BadRequest(result.Errors);
                 }
