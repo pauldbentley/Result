@@ -17,11 +17,7 @@
         [HttpGet("OkWithValue")]
         public IActionResult OkWithValueResult() =>
             Result
-                .Ok(new
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Ok with value",
-                })
+                .Ok(new DateTime(2021, 3, 16))
                 .ToActionResult(this);
 
         [HttpGet("NotFound")]

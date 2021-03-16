@@ -1,5 +1,6 @@
 ﻿namespace Pdb.Results.AspNetCore.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http.Json;
@@ -28,6 +29,16 @@
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var content = await response.Content.ReadAsStringAsync();
             content.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public async Task OkWithValue()
+        {
+            var client = _factory.CreateClient();
+            var response = await client.GetAsync("/Test/OkWithValue");
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var content = await response.Content.ReadFromJsonAsync<DateTime>();
+            content.ShouldBe(new DateTime(2021, 3, 16));
         }
 
         [Fact]
