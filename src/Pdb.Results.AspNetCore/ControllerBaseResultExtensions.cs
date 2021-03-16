@@ -8,14 +8,32 @@
     {
         public static Task<IActionResult> Result(
             this ControllerBase controller,
+            Func<Task<Result>> request) =>
+            ResultCore(
+                controller,
+                request,
+                r => r.ToSuccessActionResult(controller),
+                r => r.ToErrorActionResult(controller));
+
+        public static Task<IActionResult> Result(
+            this ControllerBase controller,
             Func<Task<Result>> request,
             Func<Result, IActionResult>? ok = default,
             Func<Result, IActionResult>? error = default) =>
             ResultCore(
                 controller,
                 request,
-                ok ?? controller.GetSuccessActionResult,
-                error ?? controller.GetErrorActionResult);
+                ok ?? (r => r.ToSuccessActionResult(controller)),
+                error ?? (r => r.ToErrorActionResult(controller)));
+
+        public static Task<IActionResult> Result<T>(
+            this ControllerBase controller,
+            Func<Task<Result<T>>> request) =>
+            ResultCore(
+                controller,
+                request,
+                r => r.ToSuccessActionResult(controller),
+                r => r.ToErrorActionResult(controller));
 
         public static Task<IActionResult> Result<T>(
             this ControllerBase controller,
@@ -25,8 +43,8 @@
             ResultCore(
                 controller,
                 request,
-                ok ?? controller.GetSuccessActionResult,
-                error ?? controller.GetErrorActionResult);
+                ok ?? (r => r.ToSuccessActionResult(controller)),
+                error ?? (r => r.ToErrorActionResult(controller)));
 
         private static async Task<IActionResult> ResultCore(
             this ControllerBase controller,
@@ -61,7 +79,7 @@
 
             if (!controller.ModelState.IsValid)
             {
-                return controller.BadRequest();
+                return controller.ValidationProblem();
             }
 
             var result = await request();
@@ -73,18 +91,6 @@
 
             return error(result);
         }
-
-        private static IActionResult ToActionResult(this ControllerBase controller, Result result) =>
-            result.ToActionResult(controller);
-
-        private static IActionResult GetSuccessActionResult(this ControllerBase controller, Result result) =>
-            result.ToSuccessActionResult(controller);
-
-        private static IActionResult GetSuccessActionResult<T>(this ControllerBase controller, Result<T> result) =>
-            result.ToSuccessActionResult(controller);
-
-        private static IActionResult GetErrorActionResult(this ControllerBase controller, Result result) =>
-            result.ToErrorActionResult(controller);
 
         private static void Guard(object controller, object request, object ok)
         {
