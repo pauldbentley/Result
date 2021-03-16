@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.AspNetCore.Mvc.RazorPages
 {
+    using System;
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
     using Pdb.Results;
@@ -8,8 +9,52 @@
     {
         public static IActionResult ToActionResult(
             this Result result,
+            PageModel page) =>
+            ToActionResult(
+                result,
+                page,
+                default!);
+
+        public static IActionResult ToActionResult(
+            this Result result,
             PageModel page,
-            string? modelPrefix = null)
+            string modelPrefix) =>
+            ToActionResult(
+                result,
+                page,
+                result.ToSuccessActionResult,
+                page => result.ToErrorActionResult(page, modelPrefix));
+
+        public static IActionResult ToActionResult(
+            this Result result,
+            PageModel page,
+            Func<PageModel, IActionResult> ok,
+            Func<PageModel, IActionResult> error)
+        {
+            if (result.IsSuccessful)
+            {
+                return ok(page);
+            }
+
+            return error(page);
+        }
+
+        public static IActionResult ToSuccessActionResult(
+            this Result result,
+            PageModel page)
+        {
+            return page.Page();
+        }
+
+        public static IActionResult ToErrorActionResult(
+            this Result result,
+            PageModel page) =>
+            ToErrorActionResult(result, page, default!);
+
+        public static IActionResult ToErrorActionResult(
+            this Result result,
+            PageModel page,
+            string modelPrefix)
         {
             if (result.Status == ResultStatus.NotFound)
             {
@@ -25,11 +70,11 @@
             {
                 var validationErrors = result
                     .ValidationErrors
-                    .GroupBy(e => e.Identifier)
+                    .GroupBy(e => e.Identifier ?? string.Empty)
                     .Select(e => new
                     {
                         e.Key,
-                        Value = e.Select(e => e.Message)
+                        Value = e.Select(e => e.Message ?? string.Empty)
                     });
 
                 foreach (var error in validationErrors)
@@ -51,15 +96,21 @@
 
             if (result.Status == ResultStatus.Error)
             {
+                if (result.Problem != null)
+                {
+                    page.ViewData["Problem"] = result.Problem;
+                    return page.Page();
+                }
+
                 foreach (var error in result.Errors)
                 {
-                    page.ModelState.AddModelError(string.Empty, error);
+                    page.ModelState.AddModelError(string.Empty, error ?? string.Empty);
                 }
 
                 return page.Page();
             }
 
-            return page.BadRequest();
+            return page.Page();
         }
     }
 }

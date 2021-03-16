@@ -98,18 +98,18 @@
             {
                 var validationErrors = result
                     .ValidationErrors
-                    .GroupBy(e => e.Identifier)
+                    .GroupBy(e => e.Identifier ?? string.Empty)
                     .Select(e => new
                     {
                         e.Key,
-                        Value = e.Select(e => e.Message)
+                        Value = e.Select(e => e.Message ?? string.Empty)
                     });
 
                 foreach (var error in validationErrors)
                 {
                     foreach (var errorMessage in error.Value)
                     {
-                        controller.ModelState.AddModelError(error.Key ?? string.Empty, errorMessage ?? string.Empty);
+                        controller.ModelState.AddModelError(error.Key, errorMessage);
                     }
                 }
 

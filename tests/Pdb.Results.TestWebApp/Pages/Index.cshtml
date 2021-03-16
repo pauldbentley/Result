@@ -1,0 +1,14 @@
+﻿@page
+@model Pdb.Results.TestWebApp.Pages.IndexModel
+@{
+}
+
+@(ModelState.IsValid ? "OK" : null)
+
+<div asp-validation-summary="All"></div>
+
+@{
+    var problem = ViewData["Problem"] as Tuple<string, string>;
+}
+
+@(problem != null ? problem.Item1 + ", " + problem.Item2 : null)

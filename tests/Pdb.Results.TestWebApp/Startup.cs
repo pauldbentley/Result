@@ -20,10 +20,8 @@ namespace Pdb.Results.TestWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddAuthentication(options =>
-            {
-                options.DefaultForbidScheme = "https";
-            });
+
+            services.AddRazorPages();
 
             services.AddSwaggerGen(c =>
             {
@@ -50,6 +48,7 @@ namespace Pdb.Results.TestWebApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
         }
     }

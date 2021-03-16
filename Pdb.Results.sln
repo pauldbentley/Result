@@ -20,9 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A661A6C9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pdb.Results.Tests", "tests\Pdb.Results.Tests\Pdb.Results.Tests.csproj", "{2146FFB0-ACA2-4654-B67B-D1A077A1A0C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pdb.Results.AspNetCore.Tests", "tests\Pdb.Results.AspNetCore.Tests\Pdb.Results.AspNetCore.Tests.csproj", "{6769EEB3-355C-4B03-82B9-B11035302149}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pdb.Results.AspNetCore.Tests", "tests\Pdb.Results.AspNetCore.Tests\Pdb.Results.AspNetCore.Tests.csproj", "{6769EEB3-355C-4B03-82B9-B11035302149}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pdb.Results.TestWebApp", "tests\Pdb.Results.TestWebApp\Pdb.Results.TestWebApp.csproj", "{E4F170BD-97CF-4F35-87D4-7B63AC14F30F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pdb.Results.TestWebApp", "tests\Pdb.Results.TestWebApp\Pdb.Results.TestWebApp.csproj", "{E4F170BD-97CF-4F35-87D4-7B63AC14F30F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

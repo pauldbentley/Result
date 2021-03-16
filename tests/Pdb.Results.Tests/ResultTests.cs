@@ -19,10 +19,11 @@ namespace Pdb.Results.Tests
         [Fact]
         public void Should_create_error_result()
         {
-            var actual = Result.Error();
+            string error = "An error has occurred";
+            var actual = Result.Error(error);
 
             actual.ShouldBeErrorResult();
-            actual.Errors.ShouldBeEmpty();
+            actual.Errors.ShouldBe(new[] { error });
             actual.Problem.ShouldBeNull();
         }
 
@@ -42,13 +43,10 @@ namespace Pdb.Results.Tests
         }
 
         [Theory]
-        [InlineData(false)]
-        [InlineData(true, "1", "2", "3")]
-        [InlineData(true, "1", null, "3")]
-        public void Should_create_error_result_with_errors(bool hasErrors, params string[] errors)
+        [InlineData("1", "2", "3")]
+        [InlineData("1", null, "3")]
+        public void Should_create_error_result_with_errors(params string[] errors)
         {
-            hasErrors.ShouldBe(errors.Length > 0);
-
             var actual = Result.Error(errors);
 
             actual.ShouldBeErrorResult();
@@ -65,13 +63,10 @@ namespace Pdb.Results.Tests
         }
 
         [Theory]
-        [InlineData(false)]
-        [InlineData(true, "1", "2", "3")]
-        [InlineData(true, "1", null, "3")]
-        public void Should_create_invalid_result_with_errors(bool hasErrors, params string[] errors)
+        [InlineData("1", "2", "3")]
+        [InlineData("1", null, "3")]
+        public void Should_create_invalid_result_with_errors(params string[] errors)
         {
-            hasErrors.ShouldBe(errors.Length > 0);
-
             var validationErrors = errors
                 .Select(e => new ValidationError(string.Empty, e));
 

@@ -29,7 +29,12 @@
         [HttpGet("Error")]
         public IActionResult ErrorResult() =>
             Result
-                .Error()
+                .Error(new[]
+                {
+                    "The first error",
+                    "The second error",
+                    "The third error",
+                })
                 .ToActionResult(this);
 
         [HttpGet("ErrorWithProblem")]
@@ -41,17 +46,6 @@
                 })
                 .ToActionResult(this);
 
-        [HttpGet("ErrorWithListOfErrors")]
-        public IActionResult ErrorResultWithListOfErrors() =>
-            Result
-                .Error(new[]
-                {
-                    "The first error",
-                    "The second error",
-                    "The third error",
-                })
-                .ToActionResult(this);
-
         [HttpGet("Forbidden")]
         public IActionResult ForbiddenResult() =>
             Result
@@ -60,18 +54,6 @@
 
         [HttpGet("Invalid")]
         public IActionResult InvalidResult() =>
-            Result
-                .Invalid()
-                .ToActionResult(this);
-
-        [HttpGet("InvalidWithError")]
-        public IActionResult InvalidResultWithError() =>
-            Result
-                .Invalid(new ValidationError("Field1", "There was an error"))
-                .ToActionResult(this);
-
-        [HttpGet("InvalidWithListOfErrors")]
-        public IActionResult InvalidResultWithListOfErrors() =>
             Result
                 .Invalid(new List<ValidationError>
                 {

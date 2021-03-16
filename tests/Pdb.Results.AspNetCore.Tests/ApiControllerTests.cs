@@ -57,8 +57,14 @@
             var client = _factory.CreateClient();
             var response = await client.GetAsync("/Test/Error");
             response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-            var content = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-            content.Status.ShouldBe(400);
+            var content = await response.Content.ReadFromJsonAsync<List<string>>();
+            var errors = new[]
+            {
+                "The first error",
+                "The second error",
+                "The third error",
+            };
+            content.ShouldBe(errors);
         }
 
         [Fact]
@@ -73,48 +79,10 @@
         }
 
         [Fact]
-        public async Task Error_with_list_of_errors()
-        {
-            var client = _factory.CreateClient();
-            var response = await client.GetAsync("/Test/ErrorWithListOfErrors");
-            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-            var content = await response.Content.ReadFromJsonAsync<List<string>>();
-            var errors = new[]
-            {
-                "The first error",
-                "The second error",
-                "The third error",
-            };
-            content.ShouldBe(errors);
-        }
-
-        [Fact]
         public async Task Invalid()
         {
             var client = _factory.CreateClient();
             var response = await client.GetAsync("/Test/Invalid");
-            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-            var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Status.ShouldBe(400);
-        }
-
-        [Fact]
-        public async Task Invalid_with_an_error()
-        {
-            var client = _factory.CreateClient();
-            var response = await client.GetAsync("/Test/InvalidWithError");
-            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-            var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Status.ShouldBe(400);
-            content.Errors.Count.ShouldBe(1);
-            content.Errors["Field1"].ShouldBe(new[] { "There was an error" });
-        }
-
-        [Fact]
-        public async Task Invalid_with_a_list_of_errors()
-        {
-            var client = _factory.CreateClient();
-            var response = await client.GetAsync("/Test/InvalidWithListOfErrors");
             response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
             var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
             content.Errors.Count.ShouldBe(2);
