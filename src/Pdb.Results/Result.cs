@@ -109,6 +109,9 @@
         public static Result<T> Forbidden<T>() =>
             new(ResultStatus.Forbidden);
 
+        public static Result Invalid(string identifier, string message) =>
+            Invalid(new ValidationError(identifier, message));
+
         public static Result Invalid(params ValidationError[] validationErrors)
         {
             if (validationErrors is null)
@@ -150,6 +153,9 @@
 
             return Invalid(list);
         }
+
+        public static Result<T> Invalid<T>(string identifier, string message) =>
+            Invalid<T>(new ValidationError(identifier, message));
 
         public static Result<T> Invalid<T>(params ValidationError[] validationErrors)
         {
