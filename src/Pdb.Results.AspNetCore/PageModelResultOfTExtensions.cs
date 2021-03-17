@@ -67,6 +67,22 @@
                     return result.ToErrorActionResult(page, modelPrefix);
                 });
 
+        public static Task<IActionResult> Result<T>(
+            this PageModel page,
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult> ok,
+            Action<Result<T>> error,
+            string modelPrefix) =>
+            ResultCoreAsync(
+                page,
+                request,
+                ok,
+                result =>
+                {
+                    error(result);
+                    return result.ToErrorActionResult(page, modelPrefix);
+                });
+
         private static async Task<IActionResult> ResultCoreAsync<T>(this PageModel page,
             Func<Task<Result<T>>> request,
             Func<Result<T>, IActionResult> ok,
