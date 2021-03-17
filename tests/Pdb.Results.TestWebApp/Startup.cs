@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +24,19 @@ namespace Pdb.Results.TestWebApp
             services.AddControllers();
 
             services.AddRazorPages();
+
+            services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    options =>
+                    {
+                        options.Events.OnRedirectToAccessDenied = context =>
+                        {
+                            context.Response.StatusCode = 403;
+                            return Task.CompletedTask;
+                        };
+                    });
 
             services.AddSwaggerGen(c =>
             {

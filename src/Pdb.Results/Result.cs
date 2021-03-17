@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class Result
     {
@@ -144,9 +143,9 @@
             }
 
             return new(ResultStatus.Invalid)
-             {
-                 ValidationErrors = validationErrors,
-             };
+            {
+                ValidationErrors = validationErrors,
+            };
         }
 
         public static Result<T> Invalid<T>(IEnumerable<ValidationError> validationErrors)

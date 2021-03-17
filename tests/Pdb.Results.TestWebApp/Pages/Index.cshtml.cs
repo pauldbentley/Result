@@ -39,5 +39,10 @@ namespace Pdb.Results.TestWebApp.Pages
                     { "Field2", "Field 2 first error." },
                 })
                 .ToActionResult(this);
+
+        public IActionResult OnGetForbidden() =>
+            Result
+                .Forbidden()
+                .ToActionResult(this);
     }
 }

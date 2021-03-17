@@ -52,6 +52,14 @@
         }
 
         [Fact]
+        public async Task Forbidden()
+        {
+            var client = _factory.CreateClient();
+            var response = await client.GetAsync("/Test/Forbidden");
+            response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
         public async Task Error()
         {
             var client = _factory.CreateClient();
