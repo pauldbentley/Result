@@ -135,6 +135,22 @@
             };
         }
 
+        public static Result Invalid(IReadOnlyDictionary<string, string[]> validationErrors)
+        {
+            if (validationErrors is null)
+            {
+                throw new ArgumentNullException(nameof(validationErrors));
+            }
+
+            var list = new List<ValidationError>();
+            foreach (var validationError in validationErrors)
+            {
+                list.Add(validationError.Key, validationError.Value);
+            }
+
+            return Invalid(list);
+        }
+
         public static Result<T> Invalid<T>(params ValidationError[] validationErrors)
         {
             if (validationErrors is null)
@@ -159,6 +175,22 @@
             {
                 ValidationErrors = validationErrors,
             };
+        }
+
+        public static Result<T> Invalid<T>(IReadOnlyDictionary<string, string[]> validationErrors)
+        {
+            if (validationErrors is null)
+            {
+                throw new ArgumentNullException(nameof(validationErrors));
+            }
+
+            var list = new List<ValidationError>();
+            foreach (var validationError in validationErrors)
+            {
+                list.Add(validationError.Key, validationError.Value);
+            }
+
+            return Invalid<T>(list);
         }
 
         public static Result NotFound() =>
