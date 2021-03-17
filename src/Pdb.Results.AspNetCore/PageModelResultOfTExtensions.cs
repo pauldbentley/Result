@@ -5,21 +5,31 @@
     using Pdb.Results;
     using static Pdb.Results.Result;
 
-    public static class PageModelResultExtensions
+    public static class PageModelResultOfTExtensions
     {
-        public static Task<IActionResult> Result(
+        public static Task<IActionResult> Result<T>(
             this PageModel page,
-            Func<Task<Result>> request) =>
+            Func<Task<Result<T>>> request) =>
             ResultCoreAsync(
                 page,
                 request,
                 result => result.ToSuccessActionResult(page),
                 result => result.ToErrorActionResult(page));
 
-        public static Task<IActionResult> Result(
+        public static Task<IActionResult> Result<T>(
             this PageModel page,
-            Func<Task<Result>> request,
-            Func<Result, IActionResult> ok,
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult> ok) =>
+            ResultCoreAsync(
+                page,
+                request,
+                ok,
+                result => result.ToErrorActionResult(page));
+
+        public static Task<IActionResult> Result<T>(
+            this PageModel page,
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult> ok,
             string modelPrefix) =>
             ResultCoreAsync(
                 page,
@@ -27,10 +37,10 @@
                 ok,
                 result => result.ToErrorActionResult(page, modelPrefix));
 
-        public static Task<IActionResult> Result(
+        public static Task<IActionResult> Result<T>(
             this PageModel page,
-            Func<Task<Result>> request,
-            Action<Result> ok) =>
+            Func<Task<Result<T>>> request,
+            Action<Result<T>> ok) =>
             ResultCoreAsync(
                 page,
                 request,
@@ -41,11 +51,11 @@
                 },
                 result => result.ToErrorActionResult(page));
 
-        public static Task<IActionResult> Result(
+        public static Task<IActionResult> Result<T>(
             this PageModel page,
-            Func<Task<Result>> request,
-            Func<Result, IActionResult> ok,
-            Func<Result, Task> error,
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult> ok,
+            Func<Result<T>, Task> error,
             string modelPrefix) =>
             ResultCoreAsync(
                 page,
@@ -57,16 +67,16 @@
                     return result.ToErrorActionResult(page, modelPrefix);
                 });
 
-        private static async Task<IActionResult> ResultCoreAsync(this PageModel page,
-            Func<Task<Result>> request,
-            Func<Result, IActionResult> ok,
-            Func<Result, IActionResult> error)
+        private static async Task<IActionResult> ResultCoreAsync<T>(this PageModel page,
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult> ok,
+            Func<Result<T>, IActionResult> error)
         {
             Guard(page, request, ok, error);
 
             if (!page.ModelState.IsValid)
             {
-                return error(Invalid());
+                return error(Invalid<T>());
             }
 
             var result = await request();
@@ -78,16 +88,16 @@
             return error(result);
         }
 
-        private static async Task<IActionResult> ResultCoreAsync(this PageModel page,
-            Func<Task<Result>> request,
-            Func<Result, IActionResult> ok,
-            Func<Result, Task<IActionResult>> error)
+        private static async Task<IActionResult> ResultCoreAsync<T>(this PageModel page,
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult> ok,
+            Func<Result<T>, Task<IActionResult>> error)
         {
             Guard(page, request, ok, error);
 
             if (!page.ModelState.IsValid)
             {
-                return await error(Invalid());
+                return await error(Invalid<T>());
             }
 
             var result = await request();
