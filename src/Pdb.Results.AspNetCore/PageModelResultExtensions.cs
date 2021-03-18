@@ -83,7 +83,8 @@
                     return result.ToErrorActionResult(page, modelPrefix);
                 });
 
-        private static async Task<IActionResult> ResultCoreAsync(this PageModel page,
+        private static async Task<IActionResult> ResultCoreAsync(
+            this PageModel page,
             Func<Task<Result>> request,
             Func<Result, IActionResult> ok,
             Func<Result, IActionResult> error)
@@ -104,7 +105,8 @@
             return error(result);
         }
 
-        private static async Task<IActionResult> ResultCoreAsync(this PageModel page,
+        private static async Task<IActionResult> ResultCoreAsync(
+            this PageModel page,
             Func<Task<Result>> request,
             Func<Result, IActionResult> ok,
             Func<Result, Task<IActionResult>> error)

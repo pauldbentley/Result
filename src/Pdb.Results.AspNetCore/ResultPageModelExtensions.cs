@@ -7,16 +7,16 @@
 
     public static class ResultPageModelExtensions
     {
-        public static IActionResult ToActionResult(
-            this Result result,
+        public static IActionResult ToActionResult<T>(
+            this Result<T> result,
             PageModel page) =>
             ToActionResult(
                 result,
                 page,
                 default!);
 
-        public static IActionResult ToActionResult(
-            this Result result,
+        public static IActionResult ToActionResult<T>(
+            this Result<T> result,
             PageModel page,
             string modelPrefix) =>
             ToActionResult(
@@ -25,8 +25,8 @@
                 result.ToSuccessActionResult,
                 page => result.ToErrorActionResult(page, modelPrefix));
 
-        public static IActionResult ToActionResult(
-            this Result result,
+        public static IActionResult ToActionResult<T>(
+            this Result<T> result,
             PageModel page,
             Func<PageModel, IActionResult> ok,
             Func<PageModel, IActionResult> error)
@@ -39,20 +39,20 @@
             return error(page);
         }
 
-        public static IActionResult ToSuccessActionResult(
-            this Result result,
+        public static IActionResult ToSuccessActionResult<T>(
+            this Result<T> result,
             PageModel page)
         {
             return page.Page();
         }
 
-        public static IActionResult ToErrorActionResult(
-            this Result result,
+        public static IActionResult ToErrorActionResult<T>(
+            this Result<T> result,
             PageModel page) =>
             ToErrorActionResult(result, page, default!);
 
-        public static IActionResult ToErrorActionResult(
-            this Result result,
+        public static IActionResult ToErrorActionResult<T>(
+            this Result<T> result,
             PageModel page,
             string modelPrefix)
         {

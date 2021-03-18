@@ -6,31 +6,12 @@
 
     public static class ResultControllerBaseExtensions
     {
-        public static IActionResult ToActionResult(this Result result, ControllerBase controller) =>
-            result.ToActionResult(
-                controller,
-                result.ToSuccessActionResult,
-                result.ToErrorActionResult);
-
         public static IActionResult ToActionResult<T>(this Result<T> result, ControllerBase controller) =>
             result.ToActionResult(
                 controller,
                 result.ToSuccessActionResult,
                 result.ToErrorActionResult);
 
-        public static IActionResult ToActionResult(
-            this Result result,
-            ControllerBase controller,
-            Func<ControllerBase, IActionResult> ok)
-        {
-            if (result.IsSuccessful)
-            {
-                return ok(controller);
-            }
-
-            return result.ToErrorActionResult(controller);
-        }
-
         public static IActionResult ToActionResult<T>(
             this Result<T> result,
             ControllerBase controller,
@@ -42,20 +23,6 @@
             }
 
             return result.ToErrorActionResult(controller);
-        }
-
-        public static IActionResult ToActionResult(
-            this Result result,
-            ControllerBase controller,
-            Func<ControllerBase, IActionResult> ok,
-            Func<ControllerBase, IActionResult> error)
-        {
-            if (result.IsSuccessful)
-            {
-                return ok(controller);
-            }
-
-            return error(controller);
         }
 
         public static IActionResult ToActionResult<T>(
@@ -72,17 +39,26 @@
             return error(controller);
         }
 
-        public static IActionResult ToSuccessActionResult(this Result result, ControllerBase controller)
+        public static IActionResult ToSuccessActionResult<T>(
+            this Result<T> result,
+            ControllerBase controller)
         {
-            return controller.Ok();
-        }
+            if (result.Value == null)
+            {
+                return controller.Ok();
+            }
 
-        public static IActionResult ToSuccessActionResult<T>(this Result<T> result, ControllerBase controller)
-        {
+            if (result.Value is VoidValue)
+            {
+                return controller.Ok();
+            }
+
             return controller.Ok(result.Value);
         }
 
-        public static IActionResult ToErrorActionResult(this Result result, ControllerBase controller)
+        public static IActionResult ToErrorActionResult<T>(
+            this Result<T> result,
+            ControllerBase controller)
         {
             if (result.Status == ResultStatus.NotFound)
             {
