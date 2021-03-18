@@ -3,66 +3,27 @@
     using System;
     using System.Collections.Generic;
 
-    public class Result
+    public class Result : Result<VoidValue>
     {
         public Result(ResultStatus status)
+            : base(status, VoidValue.Value)
         {
-            Status = status;
         }
 
-        public ResultStatus Status { get; }
-
-        public IEnumerable<string> Errors { get; private set; } = new List<string>();
-
-        public IEnumerable<ValidationError> ValidationErrors { get; private set; } = new List<ValidationError>();
-
-        public bool IsSuccessful => Status == ResultStatus.Ok;
-
-        public object Problem { get; private set; } = default!;
-
-        public static Result Ok() => new(ResultStatus.Ok);
+        public static Result Ok() =>
+            Ok(VoidValue.Value);
 
         public static Result<T> Ok<T>(T value) =>
             new(ResultStatus.Ok, value);
 
-        public static Result Error(params string[] errors)
-        {
-            if (errors is null)
-            {
-                throw new ArgumentNullException(nameof(errors));
-            }
+        public static Result Error(params string[] errors) =>
+            Error<VoidValue>(errors);
 
-            return new(ResultStatus.Error)
-            {
-                Errors = errors,
-            };
-        }
+        public static Result Error(IEnumerable<string> errors) =>
+            Error<VoidValue>(errors);
 
-        public static Result Error(IEnumerable<string> errors)
-        {
-            if (errors is null)
-            {
-                throw new ArgumentNullException(nameof(errors));
-            }
-
-            return new(ResultStatus.Error)
-            {
-                Errors = errors,
-            };
-        }
-
-        public static Result Error(object problem)
-        {
-            if (problem is null)
-            {
-                throw new ArgumentNullException(nameof(problem));
-            }
-
-            return new(ResultStatus.Error)
-            {
-                Problem = problem,
-            };
-        }
+        public static Result Error(object problem) =>
+            Error<VoidValue>(problem);
 
         public static Result<T> Error<T>(params string[] errors)
         {
@@ -104,55 +65,22 @@
         }
 
         public static Result Forbidden() =>
-            new(ResultStatus.Forbidden);
+            Forbidden<VoidValue>();
 
         public static Result<T> Forbidden<T>() =>
             new(ResultStatus.Forbidden);
 
         public static Result Invalid(string identifier, string message) =>
-            Invalid(new ValidationError(identifier, message));
+            Invalid<VoidValue>(identifier, message);
 
-        public static Result Invalid(params ValidationError[] validationErrors)
-        {
-            if (validationErrors is null)
-            {
-                throw new ArgumentNullException(nameof(validationErrors));
-            }
+        public static Result Invalid(params ValidationError[] validationErrors) =>
+            Invalid<VoidValue>(validationErrors);
 
-            return new(ResultStatus.Invalid)
-            {
-                ValidationErrors = validationErrors,
-            };
-        }
+        public static Result Invalid(IEnumerable<ValidationError> validationErrors) =>
+            Invalid<VoidValue>(validationErrors);
 
-        public static Result Invalid(IEnumerable<ValidationError> validationErrors)
-        {
-            if (validationErrors is null)
-            {
-                throw new ArgumentNullException(nameof(validationErrors));
-            }
-
-            return new(ResultStatus.Invalid)
-            {
-                ValidationErrors = validationErrors,
-            };
-        }
-
-        public static Result Invalid(IReadOnlyDictionary<string, string[]> validationErrors)
-        {
-            if (validationErrors is null)
-            {
-                throw new ArgumentNullException(nameof(validationErrors));
-            }
-
-            var list = new List<ValidationError>();
-            foreach (var validationError in validationErrors)
-            {
-                list.Add(validationError.Key, validationError.Value);
-            }
-
-            return Invalid(list);
-        }
+        public static Result Invalid(IReadOnlyDictionary<string, string[]> validationErrors) =>
+            Invalid<VoidValue>(validationErrors);
 
         public static Result<T> Invalid<T>(string identifier, string message) =>
             Invalid<T>(new ValidationError(identifier, message));
@@ -200,7 +128,7 @@
         }
 
         public static Result NotFound() =>
-            new(ResultStatus.NotFound);
+            NotFound<VoidValue>();
 
         public static Result<T> NotFound<T>() =>
             new(ResultStatus.NotFound);

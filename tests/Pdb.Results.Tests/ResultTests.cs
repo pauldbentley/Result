@@ -17,6 +17,21 @@ namespace Pdb.Results.Tests
         }
 
         [Fact]
+        public void Should_create_ok_result_with_value()
+        {
+            var value = new
+            {
+                Processed = true,
+                Message = "The method returned ok",
+            };
+
+            var actual = Result.Ok(value);
+
+            actual.ShouldBeOkResult();
+            actual.Value.ShouldBe(value);
+        }
+
+        [Fact]
         public void Should_create_error_result()
         {
             string error = "An error has occurred";

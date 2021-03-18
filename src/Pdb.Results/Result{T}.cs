@@ -1,32 +1,34 @@
 ﻿namespace Pdb.Results
 {
     using System;
+    using System.Collections.Generic;
 
-    public class Result<T> : Result
+    public class Result<T>
     {
-        public Result(ResultStatus status)
-            : base(status)
+        internal Result(ResultStatus status)
+            : this(status, default!)
         {
-            if (status == ResultStatus.Ok)
-            {
-                throw new InvalidOperationException();
-            }
-
-            Value = default!;
         }
 
-        public Result(ResultStatus status, T value)
-            : base(status)
+        internal Result(ResultStatus status, T value)
         {
-            if (status == ResultStatus.Ok && value is null)
-            {
-                throw new InvalidOperationException();
-            }
-
+            Status = status;
             Value = value;
         }
 
-        public T Value { get; private set; }
+        public T Value { get; internal set; }
+
+        public ResultStatus Status { get; internal set; }
+
+        public IEnumerable<string> Errors { get; internal set; } = new List<string>();
+
+        public IEnumerable<ValidationError> ValidationErrors { get; internal set; } = new List<ValidationError>();
+
+        public bool IsSuccessful => Status == ResultStatus.Ok;
+
+        public object Problem { get; internal set; } = default!;
+
+        public static implicit operator Result(Result<T> value) => value.ToResult();
 
         public static implicit operator Result<T>(T value)
         {
@@ -39,5 +41,15 @@
         }
 
         public static implicit operator T(Result<T> result) => result.Value;
+
+        public override string ToString() => Status.ToString();
+
+        public Result ToResult() =>
+            new(Status)
+            {
+                Errors = Errors,
+                Problem = Problem,
+                ValidationErrors = ValidationErrors,
+            };
     }
 }

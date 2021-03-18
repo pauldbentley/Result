@@ -4,7 +4,7 @@
 
     public static class ShouldBeResultExtensions
     {
-        public static void ShouldBeOkResult(this Result actual)
+        public static void ShouldBeOkResult<T>(this Result<T> actual)
         {
             actual.Errors.ShouldBeEmpty();
             actual.IsSuccessful.ShouldBeTrue();
@@ -13,14 +13,14 @@
             actual.ValidationErrors.ShouldBeEmpty();
         }
 
-        public static void ShouldBeErrorResult(this Result actual)
+        public static void ShouldBeErrorResult<T>(this Result<T> actual)
         {
             actual.IsSuccessful.ShouldBeFalse();
             actual.Status.ShouldBe(ResultStatus.Error);
             actual.ValidationErrors.ShouldBeEmpty();
         }
 
-        public static void ShouldBeForbiddenResult(this Result actual)
+        public static void ShouldBeForbiddenResult<T>(this Result<T> actual)
         {
             actual.Errors.ShouldBeEmpty();
             actual.IsSuccessful.ShouldBeFalse();
@@ -29,7 +29,7 @@
             actual.ValidationErrors.ShouldBeEmpty();
         }
 
-        public static void ShouldBeNotFoundResult(this Result actual)
+        public static void ShouldBeNotFoundResult<T>(this Result<T> actual)
         {
             actual.Errors.ShouldBeEmpty();
             actual.IsSuccessful.ShouldBeFalse();
@@ -38,7 +38,7 @@
             actual.ValidationErrors.ShouldBeEmpty();
         }
 
-        public static void ShouldBeInvalidResult(this Result actual)
+        public static void ShouldBeInvalidResult<T>(this Result<T> actual)
         {
             actual.Errors.ShouldBeEmpty();
             actual.IsSuccessful.ShouldBeFalse();
