@@ -18,13 +18,23 @@
         public static Task<IActionResult> Result<T>(
             this ControllerBase controller,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult>? ok = default,
-            Func<Result<T>, IActionResult>? error = default) =>
+            Func<Result<T>, IActionResult> ok) =>
             ResultCore(
                 controller,
                 request,
-                ok ?? (r => r.ToSuccessActionResult(controller)),
-                error ?? (r => r.ToErrorActionResult(controller)));
+                ok,
+                result => result.ToErrorActionResult(controller));
+
+        public static Task<IActionResult> Result<T>(
+            this ControllerBase controller,
+            Func<Task<Result<T>>> request,
+            Func<Result<T>, IActionResult> ok,
+            Func<Result<T>, IActionResult> error) =>
+            ResultCore(
+                controller,
+                request,
+                ok,
+                error);
 
         private static async Task<IActionResult> ResultCore<T>(
             this ControllerBase controller,
