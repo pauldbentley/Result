@@ -19,6 +19,16 @@
         public static Task<IActionResult> Result(
             this PageModel page,
             Func<Task<Result>> request,
+            Func<Result, IActionResult> ok) =>
+            ResultCoreAsync(
+                page,
+                request,
+                ok,
+                result => result.ToErrorActionResult(page));
+
+        public static Task<IActionResult> Result(
+            this PageModel page,
+            Func<Task<Result>> request,
             Func<Result, IActionResult> ok,
             string modelPrefix) =>
             ResultCoreAsync(
