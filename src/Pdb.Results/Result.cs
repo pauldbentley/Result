@@ -10,6 +10,11 @@
         {
         }
 
+        public static Result<T> Outcome<T>(T value) =>
+            value == null
+                ? NotFound<T>()
+                : Ok(value);
+
         public static Result Ok() =>
             Ok(VoidValue.Value);
 

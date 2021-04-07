@@ -1,6 +1,5 @@
 ﻿namespace Pdb.Results
 {
-    using System;
     using System.Collections.Generic;
 
     public class Result<T>
@@ -30,19 +29,14 @@
 
         public static implicit operator Result(Result<T> value) => value.ToResult();
 
-        public static implicit operator Result<T>(T value)
-        {
-            if (value != null)
-            {
-                return new(ResultStatus.Ok, value);
-            }
+        public static implicit operator Result<T>(T value) =>
+            Result.Outcome(value);
 
-            return new(ResultStatus.NotFound);
-        }
+        public static implicit operator T(Result<T> result) =>
+            result.Value;
 
-        public static implicit operator T(Result<T> result) => result.Value;
-
-        public override string ToString() => Status.ToString();
+        public override string ToString() =>
+            Status.ToString();
 
         public Result ToResult() =>
             new(Status)
