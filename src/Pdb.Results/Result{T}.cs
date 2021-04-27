@@ -1,31 +1,24 @@
 ﻿namespace Pdb.Results
 {
-    using System.Collections.Generic;
-
-    public class Result<T>
+    public class Result<T> : ResultBase
     {
-        internal Result(ResultStatus status)
+        public Result()
+            : this(ResultStatus.Ok)
+        {
+        }
+
+        public Result(ResultStatus status)
             : this(status, default!)
         {
         }
 
-        internal Result(ResultStatus status, T value)
+        public Result(ResultStatus status, T value)
+            : base(status)
         {
-            Status = status;
             Value = value;
         }
 
-        public T Value { get; internal set; }
-
-        public ResultStatus Status { get; internal set; }
-
-        public IEnumerable<string> Errors { get; internal set; } = new List<string>();
-
-        public IEnumerable<ValidationError> ValidationErrors { get; internal set; } = new List<ValidationError>();
-
-        public bool IsSuccessful => Status == ResultStatus.Ok;
-
-        public object Problem { get; internal set; } = default!;
+        public T Value { get; protected set; }
 
         public static implicit operator Result(Result<T> value) => value.ToResult();
 
