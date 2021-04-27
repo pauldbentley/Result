@@ -3,36 +3,87 @@
     using System;
     using System.Linq;
     using Pdb.Results;
+    using Pdb.Results.AspNetCore;
 
     public static class ResultControllerBaseExtensions
     {
-        public static ActionResult ToActionResult<T>(
-            this Result<T> result,
-            ControllerBase controller) =>
-            result.ToActionResult(
-                controller,
-                result.ToSuccessActionResult,
-                result.ToErrorActionResult);
+        public static ActionResult ToSuccessActionResult(
+            this Result result,
+            ControllerBase controller)
+        {
+            var context = ResultContext.Create(result);
+            return ToSuccessActionResult(controller, context);
+        }
 
-        public static ActionResult ToActionResult<T>(
+        public static ActionResult ToSuccessActionResult<T>(
             this Result<T> result,
+            ControllerBase controller)
+        {
+            var context = ResultContext.Create(result);
+            return ToSuccessActionResult(controller, context);
+        }
+
+        public static ActionResult ToErrorActionResult(
+            this Result result,
+            ControllerBase controller)
+        {
+            var context = ResultContext.Create(result);
+            return ToErrorActionResult(controller, context);
+        }
+
+        public static ActionResult ToErrorActionResult<T>(
+            this Result<T> result,
+            ControllerBase controller)
+        {
+            var context = ResultContext.Create(result);
+            return ToErrorActionResult(controller, context);
+        }
+
+        public static ActionResult ToActionResult(
+            this Result result,
+            ControllerBase controller)
+        {
+            var context = ResultContext.Create(result);
+            return ToActionResult(
+                controller,
+                context,
+                c => ToSuccessActionResult(c, context),
+                c => ToErrorActionResult(c, context));
+        }
+
+        public static ActionResult ToActionResult(
+            this Result result,
             ControllerBase controller,
             Func<ControllerBase, ActionResult> ok)
         {
-            if (result.IsSuccessful)
-            {
-                return ok(controller);
-            }
-
-            return result.ToErrorActionResult(controller);
+            var context = ResultContext.Create(result);
+            return ToActionResult(
+                controller,
+                context,
+                ok,
+                c => ToErrorActionResult(c, context));
         }
 
         public static ActionResult ToActionResult<T>(
             this Result<T> result,
+            ControllerBase controller)
+        {
+            var context = ResultContext.Create(result);
+            return ToActionResult(
+                controller,
+                context,
+                c => ToSuccessActionResult(c, context),
+                c => ToErrorActionResult(c, context));
+        }
+
+        private static ActionResult ToActionResult(
             ControllerBase controller,
+            ResultContext context,
             Func<ControllerBase, ActionResult> ok,
             Func<ControllerBase, ActionResult> error)
         {
+            var result = context.Result;
+
             if (result.IsSuccessful)
             {
                 return ok(controller);
@@ -41,27 +92,24 @@
             return error(controller);
         }
 
-        public static ActionResult ToSuccessActionResult<T>(
-            this Result<T> result,
-            ControllerBase controller)
+        private static ActionResult ToSuccessActionResult(
+            ControllerBase controller,
+            ResultContext context)
         {
-            if (result.Value == null)
+            if (context.IsValueResult)
             {
-                return controller.Ok();
+                return controller.Ok(context.Value);
             }
 
-            if (result.Value is VoidValue)
-            {
-                return controller.Ok();
-            }
-
-            return controller.Ok(result.Value);
+            return controller.Ok();
         }
 
-        public static ActionResult ToErrorActionResult<T>(
-            this Result<T> result,
-            ControllerBase controller)
+        private static ActionResult ToErrorActionResult(
+            ControllerBase controller,
+            ResultContext context)
         {
+            var result = context.Result;
+
             if (result.Status == ResultStatus.NotFound)
             {
                 return controller.NotFound();

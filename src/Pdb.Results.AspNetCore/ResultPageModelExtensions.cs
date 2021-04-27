@@ -4,58 +4,84 @@
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
     using Pdb.Results;
+    using Pdb.Results.AspNetCore;
 
     public static class ResultPageModelExtensions
     {
-        public static ActionResult ToActionResult<T>(
-            this Result<T> result,
-            PageModel page) =>
-            ToActionResult(
-                result,
-                page,
-                default!);
-
-        public static ActionResult ToActionResult<T>(
-            this Result<T> result,
-            PageModel page,
-            string modelPrefix) =>
-            ToActionResult(
-                result,
-                page,
-                result.ToSuccessActionResult,
-                page => result.ToErrorActionResult(page, modelPrefix));
-
-        public static ActionResult ToActionResult<T>(
-            this Result<T> result,
-            PageModel page,
-            Func<PageModel, ActionResult> ok,
-            Func<PageModel, ActionResult> error)
+        public static ActionResult ToSuccessActionResult(
+            this Result result,
+            PageModel page)
         {
-            if (result.IsSuccessful)
-            {
-                return ok(page);
-            }
-
-            return error(page);
+            var context = ResultContext.Create(result);
+            return ToSuccessActionResult(page, context);
         }
 
         public static ActionResult ToSuccessActionResult<T>(
             this Result<T> result,
             PageModel page)
         {
-            return page.Page();
+            var context = ResultContext.Create(result);
+            return ToSuccessActionResult(page, context);
+        }
+
+        public static ActionResult ToErrorActionResult(
+            this Result result,
+            PageModel page,
+            string? modelPrefix = default)
+        {
+            var context = ResultContext.Create(result);
+            return ToErrorActionResult(page, context, modelPrefix!);
         }
 
         public static ActionResult ToErrorActionResult<T>(
             this Result<T> result,
-            PageModel page) =>
-            ToErrorActionResult(result, page, default!);
+            PageModel page,
+            string? modelPrefix = default)
+        {
+            var context = ResultContext.Create(result);
+            return ToErrorActionResult(page, context, modelPrefix!);
+        }
 
-        public static ActionResult ToErrorActionResult<T>(
+        public static ActionResult ToActionResult(
+            this Result result,
+            PageModel page,
+            string? modelPrefix = default)
+        {
+            var context = ResultContext.Create(result);
+            return ToActionResult(
+                page,
+                context,
+                page => ToSuccessActionResult(page, context),
+                page => ToErrorActionResult(page, context, modelPrefix!));
+        }
+
+        public static ActionResult ToActionResult<T>(
             this Result<T> result,
             PageModel page,
+            string? modelPrefix = default)
+        {
+            var context = ResultContext.Create(result);
+            return ToActionResult(
+                page,
+                context,
+                page => ToSuccessActionResult(page, context),
+                page => ToErrorActionResult(page, context, modelPrefix!));
+        }
+
+        public static ActionResult ToSuccessActionResult(
+            PageModel page,
+            ResultContext context)
+        {
+            return page.Page();
+        }
+
+        public static ActionResult ToErrorActionResult(
+            PageModel page,
+            ResultContext context,
             string modelPrefix)
         {
+            var result = context.Result;
+
             if (result.Status == ResultStatus.NotFound)
             {
                 return page.NotFound();
@@ -111,6 +137,22 @@
             }
 
             return page.Page();
+        }
+
+        private static ActionResult ToActionResult(
+            PageModel page,
+            ResultContext context,
+            Func<PageModel, ActionResult> ok,
+            Func<PageModel, ActionResult> error)
+        {
+            var result = context.Result;
+
+            if (result.IsSuccessful)
+            {
+                return ok(page);
+            }
+
+            return error(page);
         }
     }
 }
