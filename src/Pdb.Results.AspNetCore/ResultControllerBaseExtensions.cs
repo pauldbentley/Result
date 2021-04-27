@@ -6,16 +6,18 @@
 
     public static class ResultControllerBaseExtensions
     {
-        public static IActionResult ToActionResult<T>(this Result<T> result, ControllerBase controller) =>
+        public static ActionResult ToActionResult<T>(
+            this Result<T> result,
+            ControllerBase controller) =>
             result.ToActionResult(
                 controller,
                 result.ToSuccessActionResult,
                 result.ToErrorActionResult);
 
-        public static IActionResult ToActionResult<T>(
+        public static ActionResult ToActionResult<T>(
             this Result<T> result,
             ControllerBase controller,
-            Func<ControllerBase, IActionResult> ok)
+            Func<ControllerBase, ActionResult> ok)
         {
             if (result.IsSuccessful)
             {
@@ -25,11 +27,11 @@
             return result.ToErrorActionResult(controller);
         }
 
-        public static IActionResult ToActionResult<T>(
+        public static ActionResult ToActionResult<T>(
             this Result<T> result,
             ControllerBase controller,
-            Func<ControllerBase, IActionResult> ok,
-            Func<ControllerBase, IActionResult> error)
+            Func<ControllerBase, ActionResult> ok,
+            Func<ControllerBase, ActionResult> error)
         {
             if (result.IsSuccessful)
             {
@@ -39,7 +41,7 @@
             return error(controller);
         }
 
-        public static IActionResult ToSuccessActionResult<T>(
+        public static ActionResult ToSuccessActionResult<T>(
             this Result<T> result,
             ControllerBase controller)
         {
@@ -56,7 +58,7 @@
             return controller.Ok(result.Value);
         }
 
-        public static IActionResult ToErrorActionResult<T>(
+        public static ActionResult ToErrorActionResult<T>(
             this Result<T> result,
             ControllerBase controller)
         {

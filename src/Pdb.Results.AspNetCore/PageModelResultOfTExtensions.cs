@@ -7,7 +7,7 @@
 
     public static class PageModelResultOfTExtensions
     {
-        public static Task<IActionResult> Result<T>(
+        public static Task<ActionResult> Result<T>(
             this PageModel page,
             Func<Task<Result<T>>> request) =>
             ResultCoreAsync(
@@ -16,20 +16,20 @@
                 result => result.ToSuccessActionResult(page),
                 result => result.ToErrorActionResult(page));
 
-        public static Task<IActionResult> Result<T>(
+        public static Task<ActionResult> Result<T>(
             this PageModel page,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult> ok) =>
+            Func<Result<T>, ActionResult> ok) =>
             ResultCoreAsync(
                 page,
                 request,
                 ok,
                 result => result.ToErrorActionResult(page));
 
-        public static Task<IActionResult> Result<T>(
+        public static Task<ActionResult> Result<T>(
             this PageModel page,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult> ok,
+            Func<Result<T>, ActionResult> ok,
             string modelPrefix) =>
             ResultCoreAsync(
                 page,
@@ -37,7 +37,7 @@
                 ok,
                 result => result.ToErrorActionResult(page, modelPrefix));
 
-        public static Task<IActionResult> Result<T>(
+        public static Task<ActionResult> Result<T>(
             this PageModel page,
             Func<Task<Result<T>>> request,
             Action<Result<T>> ok) =>
@@ -51,10 +51,10 @@
                 },
                 result => result.ToErrorActionResult(page));
 
-        public static Task<IActionResult> Result<T>(
+        public static Task<ActionResult> Result<T>(
             this PageModel page,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult> ok,
+            Func<Result<T>, ActionResult> ok,
             Func<Result<T>, Task> error,
             string modelPrefix) =>
             ResultCoreAsync(
@@ -67,10 +67,10 @@
                     return result.ToErrorActionResult(page, modelPrefix);
                 });
 
-        public static Task<IActionResult> Result<T>(
+        public static Task<ActionResult> Result<T>(
             this PageModel page,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult> ok,
+            Func<Result<T>, ActionResult> ok,
             Action<Result<T>> error,
             string modelPrefix) =>
             ResultCoreAsync(
@@ -83,11 +83,11 @@
                     return result.ToErrorActionResult(page, modelPrefix);
                 });
 
-        private static async Task<IActionResult> ResultCoreAsync<T>(
+        private static async Task<ActionResult> ResultCoreAsync<T>(
             this PageModel page,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult> ok,
-            Func<Result<T>, IActionResult> error)
+            Func<Result<T>, ActionResult> ok,
+            Func<Result<T>, ActionResult> error)
         {
             Guard(page, request, ok, error);
 
@@ -105,11 +105,11 @@
             return error(result);
         }
 
-        private static async Task<IActionResult> ResultCoreAsync<T>(
+        private static async Task<ActionResult> ResultCoreAsync<T>(
             this PageModel page,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult> ok,
-            Func<Result<T>, Task<IActionResult>> error)
+            Func<Result<T>, ActionResult> ok,
+            Func<Result<T>, Task<ActionResult>> error)
         {
             Guard(page, request, ok, error);
 

@@ -6,7 +6,7 @@
 
     public static class ControllerBaseResultOfTExtensions
     {
-        public static Task<IActionResult> Result<T>(
+        public static Task<ActionResult> Result<T>(
             this ControllerBase controller,
             Func<Task<Result<T>>> request) =>
             ResultCore(
@@ -15,32 +15,32 @@
                 r => r.ToSuccessActionResult(controller),
                 r => r.ToErrorActionResult(controller));
 
-        public static Task<IActionResult> Result<T>(
+        public static Task<ActionResult> Result<T>(
             this ControllerBase controller,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult> ok) =>
+            Func<Result<T>, ActionResult> ok) =>
             ResultCore(
                 controller,
                 request,
                 ok,
                 result => result.ToErrorActionResult(controller));
 
-        public static Task<IActionResult> Result<T>(
+        public static Task<ActionResult> Result<T>(
             this ControllerBase controller,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult> ok,
-            Func<Result<T>, IActionResult> error) =>
+            Func<Result<T>, ActionResult> ok,
+            Func<Result<T>, ActionResult> error) =>
             ResultCore(
                 controller,
                 request,
                 ok,
                 error);
 
-        private static async Task<IActionResult> ResultCore<T>(
+        private static async Task<ActionResult> ResultCore<T>(
             this ControllerBase controller,
             Func<Task<Result<T>>> request,
-            Func<Result<T>, IActionResult> ok,
-            Func<Result<T>, IActionResult> error)
+            Func<Result<T>, ActionResult> ok,
+            Func<Result<T>, ActionResult> error)
         {
             Guard(controller, request, ok);
 

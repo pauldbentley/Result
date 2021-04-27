@@ -6,7 +6,7 @@
 
     public static class ControllerBaseResultExtensions
     {
-        public static Task<IActionResult> Result(
+        public static Task<ActionResult> Result(
             this ControllerBase controller,
             Func<Task<Result>> request) =>
             ResultCore(
@@ -15,32 +15,32 @@
                 r => r.ToSuccessActionResult(controller),
                 r => r.ToErrorActionResult(controller));
 
-        public static Task<IActionResult> Result(
+        public static Task<ActionResult> Result(
             this ControllerBase controller,
             Func<Task<Result>> request,
-            Func<Result, IActionResult> ok) =>
+            Func<Result, ActionResult> ok) =>
             ResultCore(
                 controller,
                 request,
                 ok,
                 result => result.ToErrorActionResult(controller));
 
-        public static Task<IActionResult> Result(
+        public static Task<ActionResult> Result(
             this ControllerBase controller,
             Func<Task<Result>> request,
-            Func<Result, IActionResult> ok,
-            Func<Result, IActionResult> error) =>
+            Func<Result, ActionResult> ok,
+            Func<Result, ActionResult> error) =>
             ResultCore(
                 controller,
                 request,
                 ok,
                 error);
 
-        private static async Task<IActionResult> ResultCore(
+        private static async Task<ActionResult> ResultCore(
             this ControllerBase controller,
             Func<Task<Result>> request,
-            Func<Result, IActionResult> ok,
-            Func<Result, IActionResult> error)
+            Func<Result, ActionResult> ok,
+            Func<Result, ActionResult> error)
         {
             Guard(controller, request, ok);
 

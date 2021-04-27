@@ -10,23 +10,23 @@
     public class ResultExtensionsController : ControllerBase
     {
         [HttpGet("Ok")]
-        public Task<IActionResult> OkResultAsync() =>
+        public Task<ActionResult> OkResultAsync() =>
             this.Result(() => GetResultAsync());
 
         [HttpGet("OkWithValue")]
-        public IActionResult OkWithValueResult() =>
+        public ActionResult OkWithValueResult() =>
             Result
                 .Ok(new DateTime(2021, 3, 16))
                 .ToActionResult(this);
 
         [HttpGet("NotFound")]
-        public IActionResult NotFoundResult() =>
+        public ActionResult NotFoundResult() =>
             Result
                 .NotFound()
                 .ToActionResult(this);
 
         [HttpGet("Error")]
-        public IActionResult ErrorResult() =>
+        public ActionResult ErrorResult() =>
             Result
                 .Error(new[]
                 {
@@ -37,7 +37,7 @@
                 .ToActionResult(this);
 
         [HttpGet("ErrorWithProblem")]
-        public IActionResult ErrorResultWithProblem() =>
+        public ActionResult ErrorResultWithProblem() =>
             Result
                 .Error(new
                 {
@@ -46,13 +46,13 @@
                 .ToActionResult(this);
 
         [HttpGet("Forbidden")]
-        public IActionResult ForbiddenResult() =>
+        public ActionResult ForbiddenResult() =>
             Result
                 .Forbidden()
                 .ToActionResult(this);
 
         [HttpGet("Invalid")]
-        public IActionResult InvalidResult() =>
+        public ActionResult InvalidResult() =>
             Result
                 .Invalid(new List<ValidationError>
                 {
@@ -63,7 +63,7 @@
                 .ToActionResult(this);
 
         [HttpGet("Accepted")]
-        public IActionResult AcceptedResult() =>
+        public ActionResult AcceptedResult() =>
             Result
                 .Ok()
                 .ToActionResult(
